@@ -28,23 +28,23 @@ val FILE_CENSUS="census-income-reducido.data"
 val censusSchema = StructType(Array(
   StructField("age", IntegerType, false),
   StructField("class_of_worker", StringType, true),
-  StructField("industry_code", StringType, true),
-  StructField("occupation_code", StringType, true),
+  StructField("industry_code", IntegerType, true),
+  StructField("occupation_code", IntegerType, true),
   StructField("education", StringType, true),
-  StructField("wage_per_hour", DoubleType, false),
+  StructField("wage_per_hour", IntegerType, false),
   StructField("enrolled_in_edu_last_wk", StringType, true),  
   StructField("marital_status", StringType, true),
   StructField("major_industry_code", StringType, true),
   StructField("major_occupation_code", StringType, true),
   StructField("race", StringType, true),
-  StructField("hispanic_origin", StringType, true),
+  StructField("hispanic_Origin", StringType, true),
   StructField("sex", StringType, true),
   StructField("member_of_labor_union", StringType, true),
   StructField("reason_for_unemployment", StringType, true),
   StructField("full_or_part_time_employment_status", StringType, true),
-  StructField("capital_gains", DoubleType, false),
-  StructField("capital_losses", DoubleType, false),
-  StructField("dividends_from_stocks", DoubleType, false),
+  StructField("capital_gains", IntegerType, false),
+  StructField("capital_losses", IntegerType, false),
+  StructField("dividends_from_stocks", IntegerType, false),
   StructField("tax_filer_status", StringType, true),
   StructField("region_of_previous_residence", StringType, true),
   StructField("state_of_previous_residence", StringType, true),
@@ -56,24 +56,25 @@ val censusSchema = StructType(Array(
   StructField("migration_code_move_within_reg", StringType, true),
   StructField("live_in_this_house_one_year_ago", StringType, true),
   StructField("migration_prev_res_in_sunbelt", StringType, true),
-  StructField("num_persons_worked_for_employer", StringType, false),
+  StructField("num_persons_worked_for_employer", IntegerType, false),
   StructField("family_members_under_18", StringType, true),  
   StructField("country_of_birth_father", StringType, true),
   StructField("country_of_birth_mother", StringType, true),
   StructField("country_of_birth_self", StringType, true),
   StructField("citizenship", StringType, true),
-  StructField("own_business_or_self_employed", DoubleType, true),
+  StructField("own_business_or_self_employed", IntegerType, true),
   StructField("fill_inc_questionnaire_for_veterans_ad", StringType, true),
-  StructField("veterans_benefits", DoubleType, false),
-  StructField("weeks_worked_in_year", StringType, false),
-  StructField("year", StringType, false),
+  StructField("veterans_benefits", IntegerType, false),
+  StructField("weeks_worked_in_year", IntegerType, false),
+  StructField("year", IntegerType, false),
   StructField("income", StringType, false)
 ));
 
-/* leemos los datos y asignamos nombre a las columnas con el
-esquema*/
+
+/* leemos los datos y asignamos nombre a las columnas con el esquema
+   con la opción ignoreLeadingWhiteSpace para quitar espacios en blanco de los atributos Integer*/
 val census_df = spark.read.format("csv").
-option("delimiter", ",").
+option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
 schema(censusSchema).load(PATH + FILE_CENSUS)
 
 /* evaluamos algunos datos */
@@ -88,55 +89,23 @@ val num_dividends_from_stocks = census_df.select("dividends_from_stocks").distin
 */
 
 
-//COLUMNA AGE---------------------CORRECTO
+//----------------------------------------ATRIBUTOS NUMÉRICOS-------------------------//
 
-var nombre_columna = "age"
+val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","own_business_or_self_employed","veterans_benefits","weeks_worked_in_year","year")
 
-/*
-val numero_cada_uno_diferentes_age = census_df.groupBy(nombre_columna).count()
-numero_cada_uno_diferentes_age.show(numero_cada_uno_diferentes_age.count().toInt, false)
-
-val filtrada_columna_age = census_df.filter(col(nombre_columna) > 17 && col(nombre_columna) < 100)
-val maximo_columna_age = filtrada_columna_age.agg(max(nombre_columna)).head().getInt(0)
-val minimo_columna_age = filtrada_columna_age.agg(min(nombre_columna)).head().getInt(0)
-val media_columna_age = filtrada_columna_age.select(avg(col(nombre_columna))).first().getDouble(0)
-val desviacion_columna_age = filtrada_columna_age.agg(stddev(nombre_columna)).head().getDouble(0)
-*/
-
-
-
-//COLUMNA WAGE PER HOUR----------------------CORRECTO
-
-/*
-nombre_columna = "wage_per_hour"
-val numero_cada_uno_diferentes_wage_per_hour = census_df.groupBy(nombre_columna).count()
-numero_cada_uno_diferentes_wage_per_hour.show(numero_cada_uno_diferentes_wage_per_hour.count().toInt, false)
-
-
-val maximo_columna_wage_per_hour = census_df.agg(max(nombre_columna)).head().getDouble(0)
-val minimo_columna_wage_per_hour = census_df.agg(min(nombre_columna)).head().getDouble(0)
-val media_columna_wage_per_hour = census_df.select(avg(col(nombre_columna))).first().getDouble(0)
-val desviacion_columna_wage_per_hour = census_df.agg(stddev(nombre_columna)).head().getDouble(0)
-*/
-
-
-
-
-
-//COLUMNA CAPITAL GAINS----------------------CORRECTO
-/*
-nombre_columna = "capital_gains"
-val numero_cada_uno_diferentes_capital_gains = census_df.groupBy(nombre_columna).count()
-numero_cada_uno_diferentes_capital_gains.show(numero_cada_uno_diferentes_capital_gains.count().toInt, false)
-
-
-val maximo_columna_capital_gains = census_df.agg(max(nombre_columna)).head().getDouble(0)
-val minimo_columna_capital_gains = census_df.agg(min(nombre_columna)).head().getDouble(0)
-val media_columna_capital_gains = census_df.select(avg(col(nombre_columna))).first().getDouble(0)
-val desviacion_columna_capital_gains = census_df.agg(stddev(nombre_columna)).head().getDouble(0)
-*/
-
-
+// Recorrer la lista y mostrar el nombre de cada valor
+  for (nombre_columna <- listaDeAtributosNumericos) {    
+	println("Atributo: "+nombre_columna);
+	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
+	println("Valores ausentes: "+valores_ausentes);
+	val valores_distintos = census_df.select(nombre_columna).distinct.count();
+	println("Valores distintos: "+valores_distintos);
+	val describe = census_df.describe(nombre_columna).show();	
+	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
+    // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
+    distribucion.write.mode("overwrite").csv(nombre_columna)
+		
+}
 
 
 
