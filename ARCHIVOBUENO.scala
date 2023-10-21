@@ -107,8 +107,23 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
 		
 }
 
+//----------------------------------------ATRIBUTOS NOMINALES-------------------------//
 
+val listaDeAtributosNominales = List("class_of_worker","industry_code","occupation_code","education","enrolled_in_edu_last_wk","marital_status","major_industry_code","major_occupation_code","race","hispanic_Origin","sex","member_of_labor_union","full_or_part_time_employment_status","tax_filer_status","region_of_previous_residence","state_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","migration_prev_res_in_sunbelt","family_members_under_18","country_of_birth_father","country_of_birth_mother","country_of_birth_self","citizenship","own_business_or_self_employed","fill_inc_questionnaire_for_veterans_ad","veterans_benefits","year")
 
+// Recorrer la lista y mostrar el nombre de cada valor
+  for (nombre_columna <- listaDeAtributosNominales) {    
+	println("Atributo: "+nombre_columna);
+	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
+	println("Valores ausentes: "+valores_ausentes);
+	val valores_distintos = census_df.select(nombre_columna).distinct.count();
+	println("Valores distintos: "+valores_distintos);		
+	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
+	distribucion.show();
+    // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
+    distribucion.write.mode("overwrite").csv(nombre_columna)
+		
+}
 
 
 
