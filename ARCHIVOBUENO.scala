@@ -99,37 +99,37 @@ val num_dividends_from_stocks = census_df.select("dividends_from_stocks").distin
 
 val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","own_business_or_self_employed","veterans_benefits","weeks_worked_in_year","year")
 
-// // Recorrer la lista y mostrar el nombre de cada valor
-//   for (nombre_columna <- listaDeAtributosNumericos) {
-// 	println("Atributo: "+nombre_columna);
-// 	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
-// 	println("Valores ausentes: "+valores_ausentes);
-// 	val valores_distintos = census_df.select(nombre_columna).distinct.count();
-// 	println("Valores distintos: "+valores_distintos);
-// 	val describe = census_df.describe(nombre_columna).show();
-// 	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
-//     // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
-//     distribucion.write.mode("overwrite").csv(nombre_columna)
+// Recorrer la lista y mostrar el nombre de cada valor
+  for (nombre_columna <- listaDeAtributosNumericos) {
+	println("Atributo: "+nombre_columna);
+	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
+	println("Valores ausentes: "+valores_ausentes);
+	val valores_distintos = census_df.select(nombre_columna).distinct.count();
+	println("Valores distintos: "+valores_distintos);
+	val describe = census_df.describe(nombre_columna).show();
+	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
+    // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
+    distribucion.write.mode("overwrite").csv(nombre_columna)
 
-// }
+}
 
 //----------------------------------------ATRIBUTOS NOMINALES-------------------------//
 
-// val listaDeAtributosNominales = List("class_of_worker","industry_code","occupation_code","education","enrolled_in_edu_last_wk","marital_status","major_industry_code","major_occupation_code","race","hispanic_Origin","sex","member_of_labor_union","full_or_part_time_employment_status","tax_filer_status","region_of_previous_residence","state_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","migration_prev_res_in_sunbelt","family_members_under_18","country_of_birth_father","country_of_birth_mother","country_of_birth_self","citizenship","own_business_or_self_employed","fill_inc_questionnaire_for_veterans_ad","veterans_benefits","year")
+val listaDeAtributosNominales = List("class_of_worker","industry_code","occupation_code","education","enrolled_in_edu_last_wk","marital_status","major_industry_code","major_occupation_code","race","hispanic_Origin","sex","member_of_labor_union","full_or_part_time_employment_status","tax_filer_status","region_of_previous_residence","state_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","migration_prev_res_in_sunbelt","family_members_under_18","country_of_birth_father","country_of_birth_mother","country_of_birth_self","citizenship","own_business_or_self_employed","fill_inc_questionnaire_for_veterans_ad","veterans_benefits","year")
 
-// // Recorrer la lista y mostrar el nombre de cada valor
-//   for (nombre_columna <- listaDeAtributosNominales) {
-// 	println("Atributo: "+nombre_columna);
-// 	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
-// 	println("Valores ausentes: "+valores_ausentes);
-// 	val valores_distintos = census_df.select(nombre_columna).distinct.count();
-// 	println("Valores distintos: "+valores_distintos);
-// 	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
-// 	distribucion.show();
-//     // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
-//     distribucion.write.mode("overwrite").csv(nombre_columna)
+// Recorrer la lista y mostrar el nombre de cada valor
+  for (nombre_columna <- listaDeAtributosNominales) {
+	println("Atributo: "+nombre_columna);
+	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
+	println("Valores ausentes: "+valores_ausentes);
+	val valores_distintos = census_df.select(nombre_columna).distinct.count();
+	println("Valores distintos: "+valores_distintos);
+	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
+	distribucion.show();
+    // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
+    distribucion.write.mode("overwrite").csv(nombre_columna)
 
-// }
+}
 
 
 
@@ -140,25 +140,25 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
 //----------------------------------------ATRIBUTOS CATEGORICOS-----------------------
 
 
-  // def numero_diferentes(): Long = {
-  //   val cuenta=census_df.select(nombre_columna).distinct().count()
-  //   cuenta
-  // }
+  def numero_diferentes(): Long = {
+    val cuenta=census_df.select(nombre_columna).distinct().count()
+    cuenta
+  }
 
-  // def valores_diferentes(): String = {
-  //   val distintos=census_df.select(nombre_columna).distinct().collect().map(row => row.getString(0))
-  //   val resultado_linea = distintos.mkString(", ")
-  //   resultado_linea
-  // }
+  def valores_diferentes(): String = {
+    val distintos=census_df.select(nombre_columna).distinct().collect().map(row => row.getString(0))
+    val resultado_linea = distintos.mkString(", ")
+    resultado_linea
+  }
 
-  // def numero_cada_uno_diferentes(): DataFrame = {
-  //     val numero_cada_uno=census_df.groupBy(nombre_columna).count().orderBy(desc("count")).withColumnRenamed("count", "cuenta")
-  //     numero_cada_uno
-  // }
+  def numero_cada_uno_diferentes(): DataFrame = {
+      val numero_cada_uno=census_df.groupBy(nombre_columna).count().orderBy(desc("count")).withColumnRenamed("count", "cuenta")
+      numero_cada_uno
+  }
 
-  // def crear_fichero_resultados(df:DataFrame):Unit={
-  //   sc.parallelize(df.collect().toSeq,1).saveAsTextFile(nombre_columna+"_ordered")
-  // }
+  def crear_fichero_resultados(df:DataFrame):Unit={
+    sc.parallelize(df.collect().toSeq,1).saveAsTextFile(nombre_columna+"_ordered")
+  }
 
 
 
@@ -637,60 +637,60 @@ val moda_income = numero_cada_uno_diferentes_income.first()
 
 */
 
-// val doubleToDenseVector = udf { (value: Double) =>
-//   new DenseVector(Array(value))
-// }
+val doubleToDenseVector = udf { (value: Double) =>
+  new DenseVector(Array(value))
+}
 
 
 
 
 
-// var correlaccion_categoricas=Array[String]()
+var correlaccion_categoricas=Array[String]()
 
 
 
 
-// val columnas_string = censusSchema.fields.filter(_.dataType == StringType)
+val columnas_string = censusSchema.fields.filter(_.dataType == StringType)
 
-// for (i <- 0 until columnas_string.length) {
-//   val columna_actual = columnas_string(i)
+for (i <- 0 until columnas_string.length) {
+  val columna_actual = columnas_string(i)
 
-//   for (j <- (i + 1) until columnas_string.length) {
-//     val siguiente_columna = columnas_string(j)
-//     val nuevo_dataframe = census_df.select(columna_actual.name, siguiente_columna.name)
+  for (j <- (i + 1) until columnas_string.length) {
+    val siguiente_columna = columnas_string(j)
+    val nuevo_dataframe = census_df.select(columna_actual.name, siguiente_columna.name)
 
-//     val corregido_nombre_columna_actual=columna_actual.name+"Index"
-//     val corregido_nombre_columna_siguiente=siguiente_columna.name+"Index"
+    val corregido_nombre_columna_actual=columna_actual.name+"Index"
+    val corregido_nombre_columna_siguiente=siguiente_columna.name+"Index"
 
-//     val indexer_actual = new StringIndexer().setInputCol(columna_actual.name).setOutputCol(corregido_nombre_columna_actual)
-//     val indexer_siguiente = new StringIndexer().setInputCol(siguiente_columna.name).setOutputCol(corregido_nombre_columna_siguiente)
+    val indexer_actual = new StringIndexer().setInputCol(columna_actual.name).setOutputCol(corregido_nombre_columna_actual)
+    val indexer_siguiente = new StringIndexer().setInputCol(siguiente_columna.name).setOutputCol(corregido_nombre_columna_siguiente)
 
-//     val indexers = Array(indexer_actual, indexer_siguiente)
-//     val pipeline = new Pipeline().setStages(indexers)
-//     val indexed_dataframe = pipeline.fit(nuevo_dataframe).transform(nuevo_dataframe)
-
-
-
-
-//     val nuevo_dataframe_correlaccion: DataFrame = indexed_dataframe.select(corregido_nombre_columna_actual, corregido_nombre_columna_siguiente)
+    val indexers = Array(indexer_actual, indexer_siguiente)
+    val pipeline = new Pipeline().setStages(indexers)
+    val indexed_dataframe = pipeline.fit(nuevo_dataframe).transform(nuevo_dataframe)
 
 
 
-//     val corregido_nombre_columna_siguiente_vector=corregido_nombre_columna_siguiente+"Vector"
 
-//     val nuevo_dataframe_vectors = nuevo_dataframe_correlaccion.withColumn(corregido_nombre_columna_siguiente_vector, doubleToDenseVector(col(corregido_nombre_columna_siguiente)))
-
+    val nuevo_dataframe_correlaccion: DataFrame = indexed_dataframe.select(corregido_nombre_columna_actual, corregido_nombre_columna_siguiente)
 
 
-//     val chi = ChiSquareTest.test(nuevo_dataframe_vectors, corregido_nombre_columna_siguiente_vector, corregido_nombre_columna_actual).head
-//     println(s"pValue para las columnas ${columna_actual.name} con ${siguiente_columna.name} =  ${chi.getAs[Double](0)}")
 
-//     val fila = columna_actual.name+";"+siguiente_columna.name+";"+chi.getAs[Double](0)
-//     correlaccion_categoricas = correlaccion_categoricas :+ fila
+    val corregido_nombre_columna_siguiente_vector=corregido_nombre_columna_siguiente+"Vector"
+
+    val nuevo_dataframe_vectors = nuevo_dataframe_correlaccion.withColumn(corregido_nombre_columna_siguiente_vector, doubleToDenseVector(col(corregido_nombre_columna_siguiente)))
 
 
-//   }
-// }
+
+    val chi = ChiSquareTest.test(nuevo_dataframe_vectors, corregido_nombre_columna_siguiente_vector, corregido_nombre_columna_actual).head
+    println(s"pValue para las columnas ${columna_actual.name} con ${siguiente_columna.name} =  ${chi.getAs[Double](0)}")
+
+    val fila = columna_actual.name+";"+siguiente_columna.name+";"+chi.getAs[Double](0)
+    correlaccion_categoricas = correlaccion_categoricas :+ fila
+
+
+  }
+}
 
 //----------------------------------------CORRELACIÓN ATRIBUTOS CONTINUOS-----------------------
 
