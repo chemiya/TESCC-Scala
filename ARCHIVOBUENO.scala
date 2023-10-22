@@ -18,7 +18,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.linalg.{Matrix, Vectors, DenseVector}
 import org.apache.spark.ml.stat.ChiSquareTest
 import org.apache.spark.ml.stat.Correlation
 
@@ -694,29 +694,31 @@ val moda_income = numero_cada_uno_diferentes_income.first()
 
 //----------------------------------------CORRELACIÓN ATRIBUTOS CONTINUOS-----------------------
 
-val df = census_df.select(listaDeAtributosNumericos.map(col): _*)
-val cols = listaDeAtributosNumericos
+// Atributos continuos son los numéricos menos los que representan categorías, como el código de ocupación y de industria, o own_business_or_self_employed, por ejemplo
+val listaDeAtributosContinuos = List("age","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","weeks_worked_in_year")
+val census_continuous_cols_df = census_df.select(listaDeAtributosContinuos.map(col): _*)
 
-// def export_corr_matrix(df: DataFrame, cols: List[String], filepath: String): Unit = {
-val assembled = new VectorAssembler().setInputCols(df.columns).setOutputCol("correlations").transform(df)
-val correlations = Correlation.corr(assembled, column = "correlations", method = "pearson")
+def export_corr_matrix(df: DataFrame, cols: List[String], filepath: String): Unit = {
+  val assembled = new VectorAssembler().setInputCols(df.columns).setOutputCol("correlations").transform(df)
+  val correlations = Correlation.corr(assembled, column = "correlations", method = "pearson")
+  val Row(corr_matrix: Matrix) = correlations.head
 
-correlations.collect()(0)
+  var corr_export = ""
+  val corr_header = ","+cols.mkString(",")
+  corr_export = corr_export + corr_header + "\n"
 
-// val corr_rows = correlations.collect()(0).toString.replaceAll("  \n","\n").trim.replaceAll(" +", " ").replaceAll("\\[","").replaceAll(" \\]","").replaceAll(" ",",").split("\n")
+  for (i <- 0 until corr_matrix.numRows) {
+    corr_export = corr_export + cols(i)
+    for (j <- 0 until corr_matrix.numCols) {
+      corr_export = corr_export + "," + corr_matrix(i,j).toString
+    }
+    corr_export = corr_export + "\n"
+  }
 
-// var corr_export = ""
-// val corr_header = ","+cols.mkString(",")
-// corr_export = corr_export+corr_header+"\n"
+  val file = new File(filepath)
+  val pw = new PrintWriter(file)
+  pw.write(corr_export)
+  pw.close()
+}
 
-// for (i <- 0 until corr_rows.length) {
-//   corr_export = corr_export+cols(i)+","+corr_rows(i)+"\n"
-// }
-
-// val file = new File(filepath)
-// val pw = new PrintWriter(file)
-// pw.write(corr_export)
-// pw.close()
-// }
-
-// export_corr_matrix(census_continuous_cols_df, listaDeAtributosNumericos, "corr_export.csv")
+export_corr_matrix(census_continuous_cols_df, listaDeAtributosContinuos, "corr_export.csv")
