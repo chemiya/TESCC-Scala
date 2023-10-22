@@ -80,6 +80,7 @@ val census_df = spark.read.format("csv").option("delimiter", ",").option("ignore
 
 
 
+
 //----------------------------------------ATRIBUTOS NUMÉRICOS-------------------------//
 
 val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","own_business_or_self_employed","veterans_benefits","weeks_worked_in_year","year")
@@ -97,7 +98,6 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
 	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
     // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
     distribucion.write.mode("overwrite").csv(nombre_columna)
-
 }
 
 
