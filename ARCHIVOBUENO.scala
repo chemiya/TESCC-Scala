@@ -8,8 +8,6 @@
 *           José María Lozano Olmedo.
 */
 
-
-
 /* Importamos funciones de estas bibliotecas */
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession,Row}
@@ -84,18 +82,6 @@ schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 //----------------------------------------ATRIBUTOS NUMÉRICOS-------------------------//
 
 val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","own_business_or_self_employed","veterans_benefits","weeks_worked_in_year","year")
@@ -115,38 +101,6 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
     distribucion.write.mode("overwrite").csv(nombre_columna)
 		
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -205,14 +159,6 @@ sc.parallelize(array_valores_columnas_categoricas.toSeq,1).saveAsTextFile("resum
 
 
 
-
-
-
-
-
-
-
-
 //----------------------------------------CORRELACIÓN ATRIBUTOS CONTINUOS-----------------------
 
 // Atributos continuos son los numéricos menos los que representan categorías, como el código de ocupación y de industria, o own_business_or_self_employed, por ejemplo
@@ -247,50 +193,7 @@ export_corr_matrix(census_continuous_cols_df, listaDeAtributosContinuos, "corr_e
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//-------------------------------------CORRELACION ATRIBUTOS CATEGORICOS----------------------
+/-------------------------------------CORRELACION ATRIBUTOS CATEGORICOS----------------------
 
 
 
