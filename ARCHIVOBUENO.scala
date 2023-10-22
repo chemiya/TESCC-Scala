@@ -4,11 +4,9 @@
 *  Proyecto Software: Construcción y validación de un modelo de clasificación usando la metodología CRISP-DM y Spark
 *
 *  Grupo 2: Sergio Agudelo Bernal
-*           Miguel Ángel Collado Alonso 
+*           Miguel Ángel Collado Alonso
 *           José María Lozano Olmedo.
 */
-
-
 
 /* Importamos funciones de estas bibliotecas */
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
@@ -37,7 +35,7 @@ val censusSchema = StructType(Array(
   StructField("occupation_code", IntegerType, true),
   StructField("education", StringType, true),
   StructField("wage_per_hour", IntegerType, false),
-  StructField("enrolled_in_edu_last_wk", StringType, true),  
+  StructField("enrolled_in_edu_last_wk", StringType, true),
   StructField("marital_status", StringType, true),
   StructField("major_industry_code", StringType, true),
   StructField("major_occupation_code", StringType, true),
@@ -55,14 +53,14 @@ val censusSchema = StructType(Array(
   StructField("state_of_previous_residence", StringType, true),
   StructField("detailed_household_and_family_status", StringType, true),
   StructField("detailed_household_summary_in_house_instance_weight", StringType, false),
-  StructField("total_person_earnings", DoubleType, false),  
+  StructField("total_person_earnings", DoubleType, false),
   StructField("migration_code_change_in_msa", StringType, true),
   StructField("migration_code_change_in_reg", StringType, true),
   StructField("migration_code_move_within_reg", StringType, true),
   StructField("live_in_this_house_one_year_ago", StringType, true),
   StructField("migration_prev_res_in_sunbelt", StringType, true),
   StructField("num_persons_worked_for_employer", IntegerType, false),
-  StructField("family_members_under_18", StringType, true),  
+  StructField("family_members_under_18", StringType, true),
   StructField("country_of_birth_father", StringType, true),
   StructField("country_of_birth_mother", StringType, true),
   StructField("country_of_birth_self", StringType, true),
@@ -78,21 +76,7 @@ val censusSchema = StructType(Array(
 
 /* leemos los datos y asignamos nombre a las columnas con el esquema
    con la opción ignoreLeadingWhiteSpace para quitar espacios en blanco de los atributos Integer*/
-val census_df = spark.read.format("csv").
-option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
-schema(censusSchema).load(PATH + FILE_CENSUS)
-
-
-
-
-
-
-
-
-
-
-
-
+val census_df = spark.read.format("csv").option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 
@@ -103,50 +87,18 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
 
 
 // Recorrer la lista y mostrar el nombre de cada valor
-  for (nombre_columna <- listaDeAtributosNumericos) {    
+  for (nombre_columna <- listaDeAtributosNumericos) {
 	println("Atributo: "+nombre_columna);
 	val valores_ausentes=census_df.filter(col(nombre_columna).isNull).count();
 	println("Valores ausentes: "+valores_ausentes);
 	val valores_distintos = census_df.select(nombre_columna).distinct.count();
 	println("Valores distintos: "+valores_distintos);
-	val describe = census_df.describe(nombre_columna).show();	
+	val describe = census_df.describe(nombre_columna).show();
 	val distribucion = census_df.groupBy(nombre_columna).agg(count("*").alias("cantidad")).orderBy(desc("cantidad"))
     // Guardar la distribución en un archivo CSV sobreescribiendo si ya existe
     distribucion.write.mode("overwrite").csv(nombre_columna)
-		
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -180,7 +132,7 @@ val listaAtributosCategoricos = List("class_of_worker","education","enrolled_in_
 
 var array_valores_columnas_categoricas = Array[String]()
 
-for (nombre_columna <- listaAtributosCategoricos) { 
+for (nombre_columna <- listaAtributosCategoricos) {
 
   val numero_atributo_diferentes =numero_diferentes(nombre_columna)
   val valores_atributo_diferentes = valores_diferentes(nombre_columna)
@@ -194,20 +146,12 @@ for (nombre_columna <- listaAtributosCategoricos) {
   var escribir=nombre_columna+": "+valores_atributo_diferentes
   array_valores_columnas_categoricas=array_valores_columnas_categoricas:+escribir
 
-  
+
 
 }
 
 
 sc.parallelize(array_valores_columnas_categoricas.toSeq,1).saveAsTextFile("resumen")
-
-
-
-
-
-
-
-
 
 
 
@@ -247,59 +191,48 @@ export_corr_matrix(census_continuous_cols_df, listaDeAtributosContinuos, "corr_e
 
 
 
+//-------------------------------------OUTLIERS Y RUIDO----------------------
 
 
+def calcIsOutlierForColumn(df: DataFrame, col_name: String): (DataFrame, DataFrame) = {
+  val currentColumn_df = df.select(col_name)
 
+  val currentColumn_mean = currentColumn_df.describe().collect()(1)(1).asInstanceOf[String].toDouble
+  val currentColumn_stddev = currentColumn_df.describe().collect()(2)(1).asInstanceOf[String].toDouble
 
+  val lowerLimit = currentColumn_mean - currentColumn_stddev*3
+  val upperLimit = currentColumn_mean + currentColumn_stddev*3
 
+  println(s"Límite inferior: $lowerLimit, límite superior: $upperLimit")
 
+  val out_df = currentColumn_df.withColumn("es_outlier_por_debajo", when(col(col_name) < lowerLimit, true).otherwise(false)).withColumn("es_outlier_por_encima", when(col(col_name) > upperLimit, true).otherwise(false)).withColumn("es_outlier", when((col(col_name) < lowerLimit) || (col(col_name) > upperLimit), true).otherwise(false))
 
+  val generalOutlierDescribe = out_df.groupBy("es_outlier", "es_outlier_por_debajo", "es_outlier_por_encima").count()
+  val detailedOutlierDescribe = out_df.filter(col("es_outlier")).groupBy(col_name).count()
 
+  (generalOutlierDescribe, detailedOutlierDescribe)
+}
 
+for (i <- 0 until listaDeAtributosContinuos.length) {
+  val currentColumn = listaDeAtributosContinuos(i)
 
+  val outliersCurrentColumn = calcIsOutlierForColumn(census_continuous_cols_df, currentColumn)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  println(currentColumn)
+  println("Distribution")
+  outliersCurrentColumn._1.show()
+}
 
 
 
 //-------------------------------------CORRELACION ATRIBUTOS CATEGORICOS----------------------
-
-
 
 var correlaccion_categoricas=Array[String]()
 
 
 
 def comprobarValoresMayores(df: DataFrame):Long= {
-  
+
   val columnNames = df.columns
   //obtengo maximo de cada columna
   val maxValues = columnNames.map(col => df.agg(max(col)).collect()(0)(0).asInstanceOf[Long])
@@ -319,26 +252,25 @@ for (i <- 0 until listaAtributosCategoricos.length) {
       val siguiente_columna = listaAtributosCategoricos(j)
       //se hace la tabla de contingecnia
       var tablaContingencia = census_df.groupBy(columna_actual).pivot(siguiente_columna).count().na.fill(0)
-      
+
       tablaContingencia = tablaContingencia.drop(columna_actual)
-     
+
       //tablaContingencia.show()
 
       //tablaContingencia.printSchema()
 
       //se guardan los resultados
       val resultado = comprobarValoresMayores(tablaContingencia)
-     
+
       val fila = columna_actual+";"+siguiente_columna+";"+resultado
       println(fila)
       correlaccion_categoricas = correlaccion_categoricas :+ fila
       val nombre=columna_actual+"-"+siguiente_columna
       tablaContingencia.write.mode("overwrite").csv(nombre)
-     
+
 
     }
 
 }
 
 sc.parallelize(correlaccion_categoricas.toSeq,1).saveAsTextFile("correlacion_categoricas")
-
