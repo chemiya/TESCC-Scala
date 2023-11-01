@@ -20,11 +20,13 @@ object CleanDataframe {
 
 def cleanDataframe(census_df: DataFrame): DataFrame = {
 
-    val eliminarColumnas = Seq("fill_inc_questionnaire_for_veterans_ad", "enrolled_in_edu_last_wk", "member_of_labor_union","reason_for_unemployment")
+    /*val eliminarColumnas = Seq("fill_inc_questionnaire_for_veterans_ad", "enrolled_in_edu_last_wk", "member_of_labor_union","reason_for_unemployment")
     val nuevoDataFrame = census_df.drop(eliminarColumnas: _*)
 
 
-    nuevoDataFrame
+    nuevoDataFrame*/
 
+    val nuevoDataFrame = census_df.select("age","class_of_worker","education","marital_status","citizenship","income")
+    nuevoDataFrame
 }
 }
