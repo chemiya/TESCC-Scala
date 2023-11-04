@@ -101,5 +101,5 @@ val DTcensusModel=DTcensus.fit(trainCensusDFProcesado)
 DTcensusModel.toDebugString
 
 
-DTcensusModel.write.overwrite().save(PATH + "DTcensusModelML")
+DTcensusModel.write.overwrite().save(PATH + "modelo")
 
