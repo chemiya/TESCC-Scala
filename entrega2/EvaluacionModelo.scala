@@ -1,14 +1,3 @@
-/* Master en Ingeniería Informática - Universidad de Valladolid
-*
-*  TECNICAS ESCLABLES DE ANÁLISIS DE DATOS EN ENTORNOS BIG DATA: CLASIFICADORES
-*  Proyecto Software: Construcción y validación de un modelo de clasificación usando la metodología CRISP-DM y Spark
-*  
-*  Script para evaluar el modelo
-*
-*  Grupo 2: Sergio Agudelo Bernal
-*           Miguel Ángel Collado Alonso
-*           José María Lozano Olmedo.
-*/
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession,Row}
 import org.apache.spark.{SparkConf, SparkContext}
@@ -28,10 +17,13 @@ import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.StringIndexer
 
 
+
 val PATH = "/home/usuario/Scala/Proyecto2/"
-val loadedDTcensusModel = DecisionTreeClassificationModel.load(PATH + "DTcensusModelML")
+val loadedDTcensusModel = DecisionTreeClassificationModel.load(PATH + "modelo")
 
 val FILE_CENSUS_TEST="census-income.test"
+
+
 
 val censusSchema = StructType(Array(
   StructField("age", IntegerType, false),
@@ -78,16 +70,30 @@ val censusSchema = StructType(Array(
   StructField("income", StringType, false)
 ));
 
+
+
+
 val census_df_test = spark.read.format("csv").
 option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
 schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
+
+
 
 import TransformDataframe._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df_test)
 val testCensusDF = transformDataFrame(census_df_limpio)
 
+
+
+
+
+
+
+
 val predictionsAndLabelsDF = loadedDTcensusModel.transform(testCensusDF).select("prediction", "label")
+
+
 
 val diferentes = predictionsAndLabelsDF.filter(not(col("prediction") === col("label"))).count()
 val total=testCensusDF.count()

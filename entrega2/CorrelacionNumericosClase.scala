@@ -16,9 +16,77 @@ import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.StringIndexer
 
 
-object CleanDataframe {
 
-def cleanDataframe(census_df: DataFrame): DataFrame = {
+val PATH="/home/usuario/Scala/Proyecto/"
+val FILE_CENSUS="census-income.data"
+
+
+
+/*creamos un esquema para leer los datos */
+val censusSchema = StructType(Array(
+  StructField("age", IntegerType, false),
+  StructField("class_of_worker", StringType, true),
+  StructField("industry_code", StringType, true),
+  StructField("occupation_code", StringType, true),
+  StructField("education", StringType, true),
+  StructField("wage_per_hour", IntegerType, false),
+  StructField("enrolled_in_edu_last_wk", StringType, true),  
+  StructField("marital_status", StringType, true),
+  StructField("major_industry_code", StringType, true),
+  StructField("major_occupation_code", StringType, true),
+  StructField("race", StringType, true),
+  StructField("hispanic_Origin", StringType, true),
+  StructField("sex", StringType, true),
+  StructField("member_of_labor_union", StringType, true),
+  StructField("reason_for_unemployment", StringType, true),
+  StructField("full_or_part_time_employment_status", StringType, true),
+  StructField("capital_gains", IntegerType, false),
+  StructField("capital_losses", IntegerType, false),
+  StructField("dividends_from_stocks", IntegerType, false),
+  StructField("tax_filer_status", StringType, true),
+  StructField("region_of_previous_residence", StringType, true),
+  StructField("state_of_previous_residence", StringType, true),
+  StructField("detailed_household_and_family_status", StringType, true),
+  StructField("detailed_household_summary_in_house_instance_weight", StringType, false),
+  StructField("total_person_earnings", DoubleType, false),  
+  StructField("migration_code_change_in_msa", StringType, true),
+  StructField("migration_code_change_in_reg", StringType, true),
+  StructField("migration_code_move_within_reg", StringType, true),
+  StructField("live_in_this_house_one_year_ago", StringType, true),
+  StructField("migration_prev_res_in_sunbelt", StringType, true),
+  StructField("num_persons_worked_for_employer", IntegerType, false),
+  StructField("family_members_under_18", StringType, true),  
+  StructField("country_of_birth_father", StringType, true),
+  StructField("country_of_birth_mother", StringType, true),
+  StructField("country_of_birth_self", StringType, true),
+  StructField("citizenship", StringType, true),
+  StructField("own_business_or_self_employed", IntegerType, true),
+  StructField("fill_inc_questionnaire_for_veterans_ad", StringType, true),
+  StructField("veterans_benefits", IntegerType, false),
+  StructField("weeks_worked_in_year", IntegerType, false),
+  StructField("year", IntegerType, false),
+  StructField("income", StringType, false)
+));
+
+
+
+
+
+
+val census_df = spark.read.format("csv").
+option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
+schema(censusSchema).load(PATH + FILE_CENSUS)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -205,6 +273,30 @@ census_df_nuevo = census_df_nuevo.withColumn("weeks_worked_in_year-converted",
 
 
 
+
+
+
+
+
+
+val intervalosYear = Array(0, 94,95,100)
+val labelsYear = Array("0-94", "94-95", "95-100")
+
+
+census_df_nuevo = census_df_nuevo.withColumn("year-converted",
+  when(col("year").between(intervalosYear(0), intervalosYear(1)), labelsYear(0))
+    .when(col("year").between(intervalosYear(1), intervalosYear(2)), labelsYear(1))
+    .when(col("year").between(intervalosYear(2), intervalosYear(3)), labelsYear(2))
+    .otherwise("Out")
+)
+
+
+
+
+
+
+
+
 val intervalosOwnBusiness = Array(0, 1,2,6)
 val labelsOwnBusiness  = Array("0-1", "1-2", "2-6")
 
@@ -235,6 +327,22 @@ census_df_nuevo = census_df_nuevo.withColumn("veterans_benefits-converted",
 
 
 
+//census_df_nuevo.show()
+
+
+
+
+val listaAtributosNumericos = List("age-converted","year-converted","veterans_benefits-converted","own_business_or_self_employed-converted","wage_per_hour-converted","capital_gains-converted","capital_losses-converted","dividends_from_stocks-converted","total_person_earnings-converted","num_persons_worked_for_employer-converted","weeks_worked_in_year-converted")
+
+
+
+
+
+for (i <- 0 until listaAtributosNumericos.length) {
+  val columna_actual = listaAtributosNumericos(i)
+
+  var tablaContingencia = census_df_nuevo.groupBy(columna_actual).pivot("income").count().na.fill(0)
+  tablaContingencia.show()
 
 
 
@@ -242,14 +350,7 @@ census_df_nuevo = census_df_nuevo.withColumn("veterans_benefits-converted",
 
 
 
-
-
-
-
-    val nuevoDataFrame = census_df_nuevo.select("class_of_worker","education","marital_status","major_industry_code","major_occupation_code","member_of_labor_union","race","sex","full_or_part_time_employment_status","hispanic_Origin","tax_filer_status","region_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","family_members_under_18","citizenship","age-converted","wage_per_hour-converted","capital_gains-converted","capital_losses-converted","dividends_from_stocks-converted","total_person_earnings-converted","num_persons_worked_for_employer-converted","weeks_worked_in_year-converted","veterans_benefits-converted","own_business_or_self_employed-converted","income")
-    nuevoDataFrame
 }
-}
 
 
-//"class_of_worker","industry_code","occupation_code","education","enrolled_in_edu_last_wk","marital_status","major_industry_code","major_occupation_code","member_of_labor_union","race","sex","full_or_part_time_employment_status","reason_for_unemployment","hispanic_Origin","tax_filer_status","region_of_previous_residence","state_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","migration_prev_res_in_sunbelt","family_members_under_18","country_of_birth_father","country_of_birth_mother","country_of_birth_self","citizenship","fill_inc_questionnaire_for_veterans_ad"
+
