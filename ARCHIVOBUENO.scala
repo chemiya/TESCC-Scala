@@ -78,14 +78,9 @@ val censusSchema = StructType(Array(
    con la opción ignoreLeadingWhiteSpace para quitar espacios en blanco de los atributos Integer*/
 val census_df = spark.read.format("csv").option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").schema(censusSchema).load(PATH + FILE_CENSUS)
 
-
-
-
 //----------------------------------------ATRIBUTOS NUMÉRICOS-------------------------//
 
 val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","own_business_or_self_employed","veterans_benefits","weeks_worked_in_year","year")
-
-
 
 // Recorrer la lista y mostrar el nombre de cada valor
   for (nombre_columna <- listaDeAtributosNumericos) {
@@ -100,12 +95,9 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
     distribucion.write.mode("overwrite").csv(nombre_columna)
 }
 
-
-
 //----------------------------------------ATRIBUTOS CATEGORICOS-----------------------
 
-
-  def numero_diferentes(nombre_columna:String): Long = {
+def numero_diferentes(nombre_columna:String): Long = {
     val cuenta=census_df.select(nombre_columna).distinct().count()
     cuenta
   }
@@ -128,8 +120,6 @@ val listaDeAtributosNumericos = List("age", "industry_code", "occupation_code","
 
 val listaAtributosCategoricos = List("class_of_worker","education","enrolled_in_edu_last_wk","marital_status","major_industry_code","major_occupation_code","member_of_labor_union","race","sex","full_or_part_time_employment_status","reason_for_unemployment","hispanic_Origin","tax_filer_status","region_of_previous_residence","state_of_previous_residence","detailed_household_and_family_status","detailed_household_summary_in_house_instance_weight","migration_code_change_in_msa","migration_code_change_in_reg","migration_code_move_within_reg","live_in_this_house_one_year_ago","migration_prev_res_in_sunbelt","family_members_under_18","country_of_birth_father","country_of_birth_mother","country_of_birth_self","citizenship","fill_inc_questionnaire_for_veterans_ad")
 
-
-
 var array_valores_columnas_categoricas = Array[String]()
 
 for (nombre_columna <- listaAtributosCategoricos) {
@@ -146,15 +136,9 @@ for (nombre_columna <- listaAtributosCategoricos) {
   var escribir=nombre_columna+": "+valores_atributo_diferentes
   array_valores_columnas_categoricas=array_valores_columnas_categoricas:+escribir
 
-
-
 }
 
-
 sc.parallelize(array_valores_columnas_categoricas.toSeq,1).saveAsTextFile("resumen")
-
-
-
 
 
 //----------------------------------------CORRELACIÓN ATRIBUTOS CONTINUOS-----------------------
@@ -188,11 +172,7 @@ def export_corr_matrix(df: DataFrame, cols: List[String], filepath: String): Uni
 
 export_corr_matrix(census_continuous_cols_df, listaDeAtributosContinuos, "corr_export.csv")
 
-
-
-
 //-------------------------------------OUTLIERS Y RUIDO----------------------
-
 
 def calcIsOutlierForColumn(df: DataFrame, col_name: String): (DataFrame, DataFrame) = {
   val currentColumn_df = df.select(col_name)
@@ -223,26 +203,19 @@ for (i <- 0 until listaDeAtributosContinuos.length) {
   outliersCurrentColumn._1.show()
 }
 
-
-
 //-------------------------------------CORRELACION ATRIBUTOS CATEGORICOS----------------------
 
 var correlaccion_categoricas=Array[String]()
 
-
-
 def comprobarValoresMayores(df: DataFrame):Long= {
-
   val columnNames = df.columns
-  //obtengo maximo de cada columna
+  //obtenemos maximo de cada columna
   val maxValues = columnNames.map(col => df.agg(max(col)).collect()(0)(0).asInstanceOf[Long])
 
   val maxAmongMaxValues = maxValues.max
 
   maxAmongMaxValues
 }
-
-
 
 //para cada atributo categorico
 for (i <- 0 until listaAtributosCategoricos.length) {
@@ -255,9 +228,9 @@ for (i <- 0 until listaAtributosCategoricos.length) {
 
       tablaContingencia = tablaContingencia.drop(columna_actual)
 
-      //tablaContingencia.show()
+      tablaContingencia.show()
 
-      //tablaContingencia.printSchema()
+      tablaContingencia.printSchema()
 
       //se guardan los resultados
       val resultado = comprobarValoresMayores(tablaContingencia)
@@ -267,10 +240,7 @@ for (i <- 0 until listaAtributosCategoricos.length) {
       correlaccion_categoricas = correlaccion_categoricas :+ fila
       val nombre=columna_actual+"-"+siguiente_columna
       tablaContingencia.write.mode("overwrite").csv(nombre)
-
-
     }
-
 }
 
 sc.parallelize(correlaccion_categoricas.toSeq,1).saveAsTextFile("correlacion_categoricas")
