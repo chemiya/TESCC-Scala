@@ -19,7 +19,7 @@ import org.apache.spark.ml.feature.StringIndexer
 
 
 val PATH = "/home/usuario/Scala/Proyecto2/"
-val loadedDTcensusModel = DecisionTreeClassificationModel.load(PATH + "DTcensusModelML")
+val loadedDTcensusModel = DecisionTreeClassificationModel.load(PATH + "modelo")
 
 val FILE_CENSUS_TEST="census-income.test"
 
