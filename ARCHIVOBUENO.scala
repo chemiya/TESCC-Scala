@@ -144,7 +144,10 @@ sc.parallelize(array_valores_columnas_categoricas.toSeq,1).saveAsTextFile("resum
 //----------------------------------------CORRELACIÓN ATRIBUTOS CONTINUOS-----------------------
 
 // Atributos continuos son los numéricos menos los que representan categorías, como el código de ocupación y de industria, o own_business_or_self_employed, por ejemplo
-val listaDeAtributosContinuos = List("age","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","weeks_worked_in_year")
+// val listaDeAtributosContinuos = List("age","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","weeks_worked_in_year")
+// Vamos a analizar solo los que están en formato Double ("total_person_earnings"), ya que como no son discretos, resulta mejor este análisis. Para los discretos, se optó por ver gráficamente sus propiedades.
+val listaDeAtributosContinuos = List("total_person_earnings")
+
 val census_continuous_cols_df = census_df.select(listaDeAtributosContinuos.map(col): _*)
 
 def export_corr_matrix(df: DataFrame, cols: List[String], filepath: String): Unit = {
