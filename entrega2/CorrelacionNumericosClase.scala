@@ -1,3 +1,15 @@
+/* Master en Ingeniería Informática - Universidad de Valladolid
+*
+*  TECNICAS ESCLABLES DE ANÁLISIS DE DATOS EN ENTORNOS BIG DATA: CLASIFICADORES
+*  Proyecto Software: Construcción y validación de un modelo de clasificación usando la metodología CRISP-DM y Spark
+*
+*  Script para la correlación de los numéricos con la Clase
+*
+*  Grupo 2: Sergio Agudelo Bernal
+*           Miguel Ángel Collado Alonso
+*           José María Lozano Olmedo.
+*/
+
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession,Row}
 import org.apache.spark.{SparkConf, SparkContext}
@@ -16,10 +28,8 @@ import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.StringIndexer
 
 
-
 val PATH="/home/usuario/Scala/Proyecto/"
 val FILE_CENSUS="census-income.data"
-
 
 
 /*creamos un esquema para leer los datos */
@@ -69,26 +79,9 @@ val censusSchema = StructType(Array(
 ));
 
 
-
-
-
-
 val census_df = spark.read.format("csv").
 option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
 schema(censusSchema).load(PATH + FILE_CENSUS)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 val intervalosAge = Array(0, 18, 35, 50, 70, 100)
@@ -104,22 +97,8 @@ var census_df_nuevo = census_df.withColumn("age-converted",
     .otherwise("Out")
 )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 val intervalosWageHour = Array(0, 740,  1480,  2220, 3000, 10000)
 val labelsWageHour = Array("0-740", "740-1480", "1480-2220", "2220-3000", "3000-10000")
-
 
 census_df_nuevo = census_df_nuevo.withColumn("wage_per_hour-converted",
   when(col("wage_per_hour").between(intervalosWageHour(0), intervalosWageHour(1)), labelsWageHour(0))
@@ -129,17 +108,6 @@ census_df_nuevo = census_df_nuevo.withColumn("wage_per_hour-converted",
     .when(col("wage_per_hour").between(intervalosWageHour(4), intervalosWageHour(5)), labelsWageHour(4))
     .otherwise("Out")
 )
-
-
-
-
-
-
-
-
-
-
-
 
 val intervalosCapitalGains = Array(0, 500,  1000,  1500, 2000, 100000)
 val labelsCapitalGains = Array("0-500", "500-1000", "1000-1500", "1500-2000", "2000-100000")
@@ -153,16 +121,6 @@ census_df_nuevo = census_df_nuevo.withColumn("capital_gains-converted",
     .when(col("capital_gains").between(intervalosCapitalGains(4), intervalosCapitalGains(5)), labelsCapitalGains(4))
     .otherwise("Out")
 )
-
-
-
-
-
-
-
-
-
-
 
 val intervalosCapitalLosses = Array(0, 1120,  1680,  2240, 2800, 5000)
 val labelsCapitalLosses = Array("0-1120", "1120-1680", "1680-2240", "2240-2800", "2800-5000")
@@ -178,16 +136,6 @@ census_df_nuevo = census_df_nuevo.withColumn("capital_losses-converted",
 )
 
 
-
-
-
-
-
-
-
-
-
-
 val intervalosDividens = Array(0, 500,  1000,  5000, 10000, 100000)
 val labelsDividens = Array("0-500", "500-1000", "1000-5000", "5000-10000", "10000-100000")
 
@@ -200,17 +148,6 @@ census_df_nuevo = census_df_nuevo.withColumn("dividends_from_stocks-converted",
     .when(col("dividends_from_stocks").between(intervalosDividens(4), intervalosDividens(5)), labelsDividens(4))
     .otherwise("Out")
 )
-
-
-
-
-
-
-
-
-
-
-
 
 val intervalosTotalEarnings = Array(0, 740,  1480,  2220, 3000, 100000)
 val labelsTotalEarnings = Array("0-740", "740-1480", "1480-2220", "2220-3000", "3000-100000")
@@ -225,12 +162,6 @@ census_df_nuevo = census_df_nuevo.withColumn("total_person_earnings-converted",
     .otherwise("Out")
 )
 
-
-
-
-
-
-
 val intervalosPersonsWorkerEmployer = Array(0, 2,  4,  6, 8, 10)
 val labelsPersonsWorkerEmployer= Array("0-2", "2-4", "4-6", "6-8", "8-10")
 
@@ -243,17 +174,6 @@ census_df_nuevo = census_df_nuevo.withColumn("num_persons_worked_for_employer-co
     .when(col("num_persons_worked_for_employer").between(intervalosPersonsWorkerEmployer(4), intervalosPersonsWorkerEmployer(5)), labelsPersonsWorkerEmployer(4))
     .otherwise("Out")
 )
-
-
-
-
-
-
-
-
-
-
-
 
 val intervalosWeeksWorked = Array(0, 10,  20,  30, 40, 55)
 val labelsWeeksWorked = Array("0-10", "10-20", "20-30", "30-40", "40-55")
@@ -268,17 +188,6 @@ census_df_nuevo = census_df_nuevo.withColumn("weeks_worked_in_year-converted",
     .otherwise("Out")
 )
 
-
-
-
-
-
-
-
-
-
-
-
 val intervalosYear = Array(0, 94,95,100)
 val labelsYear = Array("0-94", "94-95", "95-100")
 
@@ -290,13 +199,6 @@ census_df_nuevo = census_df_nuevo.withColumn("year-converted",
     .otherwise("Out")
 )
 
-
-
-
-
-
-
-
 val intervalosOwnBusiness = Array(0, 1,2,6)
 val labelsOwnBusiness  = Array("0-1", "1-2", "2-6")
 
@@ -307,11 +209,6 @@ census_df_nuevo = census_df_nuevo.withColumn("own_business_or_self_employed-conv
     .when(col("own_business_or_self_employed").between(intervalosOwnBusiness(2), intervalosOwnBusiness(3)), labelsOwnBusiness(2))
     .otherwise("own_business_or_self_employed")
 )
-
-
-
-
-
 
 val intervalosVeterans = Array(0, 1,2,6)
 val labelsVeterans  = Array("0-1", "1-2", "2-6")
@@ -325,17 +222,10 @@ census_df_nuevo = census_df_nuevo.withColumn("veterans_benefits-converted",
 )
 
 
-
-
 //census_df_nuevo.show()
 
 
-
-
 val listaAtributosNumericos = List("age-converted","year-converted","veterans_benefits-converted","own_business_or_self_employed-converted","wage_per_hour-converted","capital_gains-converted","capital_losses-converted","dividends_from_stocks-converted","total_person_earnings-converted","num_persons_worked_for_employer-converted","weeks_worked_in_year-converted")
-
-
-
 
 
 for (i <- 0 until listaAtributosNumericos.length) {
@@ -343,12 +233,6 @@ for (i <- 0 until listaAtributosNumericos.length) {
 
   var tablaContingencia = census_df_nuevo.groupBy(columna_actual).pivot("income").count().na.fill(0)
   tablaContingencia.show()
-
-
-
-
-
-
 
 }
 
