@@ -167,7 +167,7 @@ val GBTcar = new GBTClassifier().setFeaturesCol("features").setLabelCol("label")
  setCheckpointInterval(10)
 
 val GBTcarModel_D =GBTcar.fit(trainCensusDFProcesado)
-val predictionsAndLabelsDF_GBT = GBTcarModel_D.transform(testCensusDF).select("prediction", "label")
+val predictionsAndLabelsDF_GBT = GBTcarModel_D.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
 predictionsAndLabelsDF_GBT.show()
 
 val rm_GBT = new RegressionMetrics(predictionsAndLabelsDF_GBT.rdd.map(x => (x(0).asInstanceOf[Double], x(1).asInstanceOf[Double])))
