@@ -19,6 +19,7 @@ import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
 import org.apache.spark.ml.classification.RandomForestClassifier
 import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics 
+import org.apache.spark.ml.linalg.Vector
 
 
 
@@ -153,7 +154,7 @@ val RFcar = new RandomForestClassifier().setFeaturesCol("features").
 
 val RFcarModel_D =RFcar.fit(trainCensusDFProcesado)
 RFcarModel_D.toDebugString
-val predictionsAndLabelsDF_RF = RFcarModel_D.transform(testCensusDF).select("prediction", "label")
+val predictionsAndLabelsDF_RF = RFcarModel_D.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
 
 val predictions = RFcarModel_D.transform(testCensusDF).select("prediction").rdd.map(_.getDouble(0))
 val labels = RFcarModel_D.transform(testCensusDF).select("label").rdd.map(_.getDouble(0))
@@ -209,12 +210,23 @@ labels.foreach {l => val fpl = metrics.truePositiveRate(l)
 
 
 
-//curva roc-----------------------------------
-val predictionsAndLabelsRDD = predictionsAndLabelsDF_RF.rdd.map(row => (row.getDouble(1), row.getDouble(0)))
-val MLlib_binarymetrics = new BinaryClassificationMetrics(predictionsAndLabelsRDD)
+
+
+
+
+//curva roc---------------------------------------------
+val probabilitiesAndLabelsRDD = predictionsAndLabelsDF_RF.select("label", "probability").rdd.map{row => (row.getAs[Vector](1).toArray, row.getDouble(0))}.map{r => ( r._1(1), r._2)}
+
+val MLlib_binarymetrics = new BinaryClassificationMetrics(probabilitiesAndLabelsRDD,15)
+
 val MLlib_auROC = MLlib_binarymetrics.areaUnderROC
-println(f"%nAUC de la curva ROC para la clase SPAM")
-println(f"con MLlib, métrica binaria, parámetros por defecto: $MLlib_auROC%1.4f%n")
+println(f"%nAUC de la curva ROC para la clase income")
+println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auROC%1.4f%n")
+
+val MLlib_auPR = MLlib_binarymetrics.areaUnderPR
+println(f"%nAUC de la curva PR para la clase income")
+println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auPR%1.4f%n")
+
 val MLlib_curvaROC =MLlib_binarymetrics.roc
-println("Puntos para construir curva ROC con MLlib predictionsAndLabelsiRDD")
-MLlib_curvaROC.take(10).foreach(x => println(x))
+println("Puntos para construir curva ROC con MLlib, probabilitiesAndLabelsRDD, 15 bins:")
+MLlib_curvaROC.take(17).foreach(x => println(x))
