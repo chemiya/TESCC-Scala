@@ -101,7 +101,7 @@ schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
 //cargamos dataset----------------------------
-import TransformDataframe._
+import TransformDataframeV2._
 import CleanDataframe._
 
 

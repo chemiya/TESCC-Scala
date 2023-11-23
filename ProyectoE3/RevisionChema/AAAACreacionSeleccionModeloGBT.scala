@@ -101,7 +101,7 @@ schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 //cargamos dataset----------------------------
-import TransformDataframe._
+import TransformDataframeV2._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df)
 val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
@@ -129,7 +129,7 @@ val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros---------------------------
 val gbt = new GBTClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(5)).addGrid(gbt.maxIter, Array(10)).build()
+val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(10,12,15)).addGrid(gbt.maxIter, Array(10,20,30)).addGrid(gbt.maxBins, Array(38,45,60)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
 val pipeline = new Pipeline().setStages(Array(gbt))
 
@@ -140,6 +140,7 @@ val bestPipelineModel = cvModel.bestModel.asInstanceOf[PipelineModel]
 val bestGBTModel = bestPipelineModel.stages(0).asInstanceOf[GBTClassificationModel]
 println(s"Best max depth: ${bestGBTModel.getMaxDepth}")
 println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
+println(s"Best max iterations: ${bestGBTModel.getMaxBins}")
 
 
 
@@ -158,7 +159,7 @@ println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
 //utilizamos mejores parametros----------------------
 val GBTcar = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").setMaxIter(bestGBTModel.getMaxIter).
  setMaxDepth(bestGBTModel.getMaxDepth).
- setMaxBins(10).
+ setMaxBins(bestGBTModel.getMaxBins).
  setMinInstancesPerNode(1).
  setMinInfoGain(0.0).
  setCacheNodeIds(false).
