@@ -1,37 +1,41 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.linalg.DenseVector
-import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
-import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.GBTClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.GBTClassificationModel
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
-import org.apache.spark.ml.linalg.Vector
+////////////////////////////////////////////////////////////////////////////////////////
+// Variables globales
+////////////////////////////////////////////////////////////////////////////////////////
 
-
-val PATH="/home/usuario/Scala/Proyecto4/"
+val PATH="/home/usuario/Scala/Proyecto3/"
 val FILE_CENSUS="census-income.data"
 val FILE_CENSUS_TEST="census-income.test"
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Imports globales
+////////////////////////////////////////////////////////////////////////////////////////
 
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, GBTClassificationModel, GBTClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
+import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.stat.ChiSquareTest
+import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 
-/*creamos un esquema para leer los datos */
+////////////////////////////////////////////////////////////////////////////////////////
+// Imports de guiones de transformación y limpieza
+////////////////////////////////////////////////////////////////////////////////////////
+
+:load TransformDataframe.scala
+:load CleanDataframe.scala
+
+import TransformDataframe._
+import CleanDataframe._
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Creación schema
+////////////////////////////////////////////////////////////////////////////////////////
+
 val censusSchema = StructType(Array(
   StructField("age", IntegerType, false),
   StructField("class_of_worker", StringType, true),
@@ -39,7 +43,7 @@ val censusSchema = StructType(Array(
   StructField("occupation_code", IntegerType, true),
   StructField("education", StringType, true),
   StructField("wage_per_hour", IntegerType, false),
-  StructField("enrolled_in_edu_last_wk", StringType, true),  
+  StructField("enrolled_in_edu_last_wk", StringType, true),
   StructField("marital_status", StringType, true),
   StructField("major_industry_code", StringType, true),
   StructField("major_occupation_code", StringType, true),
@@ -57,14 +61,14 @@ val censusSchema = StructType(Array(
   StructField("state_of_previous_residence", StringType, true),
   StructField("detailed_household_and_family_status", StringType, true),
   StructField("detailed_household_summary_in_house_instance_weight", StringType, false),
-  StructField("total_person_earnings", DoubleType, false),  
+  StructField("total_person_earnings", DoubleType, false),
   StructField("migration_code_change_in_msa", StringType, true),
   StructField("migration_code_change_in_reg", StringType, true),
   StructField("migration_code_move_within_reg", StringType, true),
   StructField("live_in_this_house_one_year_ago", StringType, true),
   StructField("migration_prev_res_in_sunbelt", StringType, true),
   StructField("num_persons_worked_for_employer", IntegerType, false),
-  StructField("family_members_under_18", StringType, true),  
+  StructField("family_members_under_18", StringType, true),
   StructField("country_of_birth_father", StringType, true),
   StructField("country_of_birth_mother", StringType, true),
   StructField("country_of_birth_self", StringType, true),
@@ -77,7 +81,8 @@ val censusSchema = StructType(Array(
   StructField("income", StringType, false)
 ));
 
-
+// val continuous_cols = Array("age","wage_per_hour","capital_gains","capital_losses","dividends_from_stocks","total_person_earnings","num_persons_worked_for_employer","weeks_worked_in_year","veterans_benefits","own_business_or_self_employed")
+val continuous_cols = Array("age","wage_per_hour","total_person_earnings","num_persons_worked_for_employer","weeks_worked_in_year")
 
 
 
@@ -103,14 +108,14 @@ schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
 //cargamos dataset----------------------------
-import TransformDataframe._
-import CleanDataframe._
-val census_df_limpio=cleanDataframe(census_df)
-val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
+val census_df_limpio=cleanDataframe2(census_df)
+// val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
+val trainCensusDFProcesado = transformDataFrame2(census_df_limpio, continuous_cols)
 
 
-val census_df_limpio=cleanDataframe(census_df_test)
-val testCensusDF = transformDataFrame(census_df_limpio)
+val census_df_test_limpio=cleanDataframe2(census_df_test)
+// val testCensusDF = transformDataFrame(census_df_test_limpio)
+val testCensusDF = transformDataFrame2(census_df_test_limpio, continuous_cols)
 
 
 
@@ -136,7 +141,7 @@ val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(5)).addGrid(g
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
 val pipeline = new Pipeline().setStages(Array(gbt))
 
-val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)  
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)
 val cvModel = cv.fit(trainCensusDFProcesado)
 
 val bestPipelineModel = cvModel.bestModel.asInstanceOf[PipelineModel]
@@ -174,7 +179,7 @@ predictionsAndLabelsDF_GBT.show()
 val rm_GBT = new RegressionMetrics(predictionsAndLabelsDF_GBT.rdd.map(x => (x(0).asInstanceOf[Double], x(1).asInstanceOf[Double])))
 println("Test metrics:")
 println("Test Explained Variance: ")
-println(rm_GBT.explainedVariance) 
+println(rm_GBT.explainedVariance)
 println("R² Coefficient")
 println(rm_GBT.r2)
 //println("Test MSE: ")
@@ -207,7 +212,7 @@ println("Summary Statistics")
 println(f"Accuracy = $accuracy%1.4f")
 
 val labels = metrics.labels
-labels.foreach {l => val pl = metrics.precision(l) 
+labels.foreach {l => val pl = metrics.precision(l)
         println(f"PrecisionByLabel($l) = $pl%1.4f")}
 
 labels.foreach {l => val fpl = metrics.falsePositiveRate(l)
@@ -227,25 +232,12 @@ labels.foreach {l => val fpl = metrics.truePositiveRate(l)
 
 
 
-
-
-
-
-
-
 //curva roc---------------------------------------------
-val probabilitiesAndLabelsRDD = predictionsAndLabelsDF_GBT.select("label", "probability").rdd.map{row => (row.getAs[Vector](1).toArray, row.getDouble(0))}.map{r => ( r._1(1), r._2)}
-
-val MLlib_binarymetrics = new BinaryClassificationMetrics(probabilitiesAndLabelsRDD,15)
-
+val predictionsAndLabelsRDD = predictionsAndLabelsDF_GBT.rdd.map(row => (row.getDouble(1), row.getDouble(0)))
+val MLlib_binarymetrics = new BinaryClassificationMetrics(predictionsAndLabelsRDD)
 val MLlib_auROC = MLlib_binarymetrics.areaUnderROC
-println(f"%nAUC de la curva ROC para la clase income")
-println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auROC%1.4f%n")
-
-val MLlib_auPR = MLlib_binarymetrics.areaUnderPR
-println(f"%nAUC de la curva PR para la clase income")
-println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auPR%1.4f%n")
-
+println(f"%nAUC de la curva ROC para la clase SPAM")
+println(f"con MLlib, métrica binaria, parámetros por defecto: $MLlib_auROC%1.4f%n")
 val MLlib_curvaROC =MLlib_binarymetrics.roc
-println("Puntos para construir curva ROC con MLlib, probabilitiesAndLabelsRDD, 15 bins:")
-MLlib_curvaROC.take(17).foreach(x => println(x))
+println("Puntos para construir curva ROC con MLlib predictionsAndLabelsiRDD")
+MLlib_curvaROC.take(10).foreach(x => println(x))

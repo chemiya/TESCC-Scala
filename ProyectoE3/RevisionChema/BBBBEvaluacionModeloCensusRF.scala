@@ -1,32 +1,22 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, RandomForestClassifier,RandomForestClassificationModel}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
-import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.GBTClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.stat.ChiSquareTest
 import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.GBTClassificationModel
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.ml.linalg.Vector
 
 
+
 val PATH="/home/usuario/Scala/Proyecto4/"
-val FILE_CENSUS="census-income.data"
+val loadedRFcensusModel = RandomForestClassificationModel.load(PATH + "modeloRF")
 val FILE_CENSUS_TEST="census-income.test"
 
 
@@ -82,9 +72,7 @@ val censusSchema = StructType(Array(
 
 
 
-val census_df = spark.read.format("csv").
-option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
-schema(censusSchema).load(PATH + FILE_CENSUS)
+
 
 
 
@@ -101,12 +89,14 @@ schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
 
+//cargamos datasets------------------------
+:load TransformDataframeV2.scala
+:load CleanDataframe.scala
 
-//cargamos dataset----------------------------
-import TransformDataframe._
+
+import TransformDataframeV2._
 import CleanDataframe._
-val census_df_limpio=cleanDataframe(census_df)
-val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
+
 
 
 val census_df_limpio=cleanDataframe(census_df_test)
@@ -130,19 +120,15 @@ val testCensusDF = transformDataFrame(census_df_limpio)
 
 
 
-//validacion cruzada y parametros---------------------------
-val gbt = new GBTClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(5)).addGrid(gbt.maxIter, Array(10)).build()
-val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
-val pipeline = new Pipeline().setStages(Array(gbt))
 
-val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)  
-val cvModel = cv.fit(trainCensusDFProcesado)
 
-val bestPipelineModel = cvModel.bestModel.asInstanceOf[PipelineModel]
-val bestGBTModel = bestPipelineModel.stages(0).asInstanceOf[GBTClassificationModel]
-println(s"Best max depth: ${bestGBTModel.getMaxDepth}")
-println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
+
+
+
+val predictionsAndLabelsDF_RF = loadedRFcensusModel.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
+
+val predictions = loadedRFcensusModel.transform(testCensusDF).select("prediction").rdd.map(_.getDouble(0))
+val labels = loadedRFcensusModel.transform(testCensusDF).select("label").rdd.map(_.getDouble(0))
 
 
 
@@ -156,48 +142,8 @@ println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
 
 
 
-
-
-//utilizamos mejores parametros----------------------
-val GBTcar = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").setMaxIter(bestGBTModel.getMaxIter).
- setMaxDepth(bestGBTModel.getMaxDepth).
- setMaxBins(10).
- setMinInstancesPerNode(1).
- setMinInfoGain(0.0).
- setCacheNodeIds(false).
- setCheckpointInterval(10)
-
-val GBTcarModel_D =GBTcar.fit(trainCensusDFProcesado)
-val predictionsAndLabelsDF_GBT = GBTcarModel_D.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
-predictionsAndLabelsDF_GBT.show()
-
-val rm_GBT = new RegressionMetrics(predictionsAndLabelsDF_GBT.rdd.map(x => (x(0).asInstanceOf[Double], x(1).asInstanceOf[Double])))
-println("Test metrics:")
-println("Test Explained Variance: ")
-println(rm_GBT.explainedVariance) 
-println("R² Coefficient")
-println(rm_GBT.r2)
-//println("Test MSE: ")
-//println(rm_GBT.meanSquaredError)
-//println("Test RMSE: ")
-//println(rm_GBT.rootMeanSquaredError)
-
-
-
-
-
-
-
-
-
-
-
-
-
-//metricas------------------------------
-val predictionsGBT = GBTcarModel_D.transform(testCensusDF).select("prediction").rdd.map(_.getDouble(0))
-val labelsGBT = GBTcarModel_D.transform(testCensusDF).select("label").rdd.map(_.getDouble(0))
-val metrics = new MulticlassMetrics(predictionsGBT.zip(labelsGBT))
+//metricas---------------------------------
+val metrics = new MulticlassMetrics(predictions.zip(labels))
 
 println("Confusion matrix:")
 println(metrics.confusionMatrix)
@@ -233,8 +179,14 @@ labels.foreach {l => val fpl = metrics.truePositiveRate(l)
 
 
 
+
+
+
+
+
+
 //curva roc---------------------------------------------
-val probabilitiesAndLabelsRDD = predictionsAndLabelsDF_GBT.select("label", "probability").rdd.map{row => (row.getAs[Vector](1).toArray, row.getDouble(0))}.map{r => ( r._1(1), r._2)}
+val probabilitiesAndLabelsRDD = predictionsAndLabelsDF_RF.select("label", "probability").rdd.map{row => (row.getAs[Vector](1).toArray, row.getDouble(0))}.map{r => ( r._1(1), r._2)}
 
 val MLlib_binarymetrics = new BinaryClassificationMetrics(probabilitiesAndLabelsRDD,15)
 

@@ -1,31 +1,24 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+
+
+
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, RandomForestClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.RandomForestClassifier
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics 
-import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 
 
 
 val PATH="/home/usuario/Scala/Proyecto4/"
 val FILE_CENSUS="census-income.data"
-val FILE_CENSUS_TEST="census-income.test"
+
 
 
 
@@ -86,9 +79,7 @@ schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 
-val census_df_test = spark.read.format("csv").
-option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
-schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
+
 
 
 
@@ -100,14 +91,16 @@ schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
 //cargamos datasets------------------------
-import TransformDataframe._
+:load TransformDataframeV2.scala
+:load CleanDataframe.scala
+
+import TransformDataframeV2._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df)
 val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 
-val census_df_limpio=cleanDataframe(census_df_test)
-val testCensusDF = transformDataFrame(census_df_limpio)
+
 
 
 
@@ -123,15 +116,16 @@ val testCensusDF = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros-----------------
 val rf = new RandomForestClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(rf.numTrees, Array(10, 20)).addGrid(rf.maxDepth, Array(5, 10)).build()
+val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(10)).addGrid(rf.numTrees, Array(10)).addGrid(rf.maxBins, Array(38)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
-val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)  
+val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2) 
 val cvModel = cv.fit(trainCensusDFProcesado)
 import org.apache.spark.ml.classification.RandomForestClassificationModel
 val bestModel = cvModel.bestModel.asInstanceOf[RandomForestClassificationModel]
 println("Best Model:")
-println(s" - Number of Trees: ${bestModel.getNumTrees}")
-println(s" - Max Depth: ${bestModel.getMaxDepth}")
+println(s" Number of Trees: ${bestModel.getNumTrees}")
+println(s" Max Depth: ${bestModel.getMaxDepth}")
+println(s"Best max bins: ${bestModel.getMaxBins}")
 
 
 
@@ -146,7 +140,7 @@ val RFcar = new RandomForestClassifier().setFeaturesCol("features").
  setLabelCol("label").
  setNumTrees(bestModel.getNumTrees).
  setMaxDepth(bestModel.getMaxDepth).
- setMaxBins(10).
+ setMaxBins(bestModel.getMaxBins).
  setMinInstancesPerNode(1).
  setMinInfoGain(0.0).
  setCacheNodeIds(false).
@@ -154,79 +148,12 @@ val RFcar = new RandomForestClassifier().setFeaturesCol("features").
 
 val RFcarModel_D =RFcar.fit(trainCensusDFProcesado)
 RFcarModel_D.toDebugString
-val predictionsAndLabelsDF_RF = RFcarModel_D.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
-
-val predictions = RFcarModel_D.transform(testCensusDF).select("prediction").rdd.map(_.getDouble(0))
-val labels = RFcarModel_D.transform(testCensusDF).select("label").rdd.map(_.getDouble(0))
 
 
+
+RFcarModel_D.write.overwrite().save(PATH + "modeloRF")
 
 
 
 
 
-
-
-
-
-
-
-//metricas---------------------------------
-val metrics = new MulticlassMetrics(predictions.zip(labels))
-
-println("Confusion matrix:")
-println(metrics.confusionMatrix)
-
-val accuracy = metrics.accuracy
-println("Summary Statistics")
-println(f"Accuracy = $accuracy%1.4f")
-
-val labels = metrics.labels
-labels.foreach {l => val pl = metrics.precision(l) 
-        println(f"PrecisionByLabel($l) = $pl%1.4f")}
-
-labels.foreach {l => val fpl = metrics.falsePositiveRate(l)
-        println(f"falsePositiveRate($l) = $fpl%1.4f")}
-
-labels.foreach {l => val fpl = metrics.truePositiveRate(l)
-        println(f"truePositiveRate($l) = $fpl%1.4f")}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//curva roc---------------------------------------------
-val probabilitiesAndLabelsRDD = predictionsAndLabelsDF_RF.select("label", "probability").rdd.map{row => (row.getAs[Vector](1).toArray, row.getDouble(0))}.map{r => ( r._1(1), r._2)}
-
-val MLlib_binarymetrics = new BinaryClassificationMetrics(probabilitiesAndLabelsRDD,15)
-
-val MLlib_auROC = MLlib_binarymetrics.areaUnderROC
-println(f"%nAUC de la curva ROC para la clase income")
-println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auROC%1.4f%n")
-
-val MLlib_auPR = MLlib_binarymetrics.areaUnderPR
-println(f"%nAUC de la curva PR para la clase income")
-println(f"con MLlib, métrica binaria, probabilitiesAndLAbelsRDD, 15 bins: $MLlib_auPR%1.4f%n")
-
-val MLlib_curvaROC =MLlib_binarymetrics.roc
-println("Puntos para construir curva ROC con MLlib, probabilitiesAndLabelsRDD, 15 bins:")
-MLlib_curvaROC.take(17).foreach(x => println(x))
