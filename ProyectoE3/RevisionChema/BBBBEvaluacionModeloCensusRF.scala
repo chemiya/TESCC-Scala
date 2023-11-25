@@ -1,24 +1,16 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, RandomForestClassifier,RandomForestClassificationModel}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.RandomForestClassificationModel
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics 
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 import org.apache.spark.ml.linalg.Vector
 
 
@@ -98,7 +90,11 @@ schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
 //cargamos datasets------------------------
-import TransformDataframe._
+:load TransformDataframeV2.scala
+:load CleanDataframe.scala
+
+
+import TransformDataframeV2._
 import CleanDataframe._
 
 

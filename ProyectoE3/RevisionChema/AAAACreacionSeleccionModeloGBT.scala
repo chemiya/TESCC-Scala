@@ -1,28 +1,18 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+
+
+
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, GBTClassificationModel, GBTClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
-import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.GBTClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.GBTClassificationModel
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
-import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 
 
 val PATH="/home/usuario/Scala/Proyecto4/"
@@ -101,6 +91,10 @@ schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 //cargamos dataset----------------------------
+:load TransformDataframeV2.scala
+:load CleanDataframe.scala
+
+
 import TransformDataframeV2._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df)
@@ -129,7 +123,7 @@ val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros---------------------------
 val gbt = new GBTClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(10,12,15)).addGrid(gbt.maxIter, Array(10,20,30)).addGrid(gbt.maxBins, Array(38,45,60)).build()
+val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(10)).addGrid(gbt.maxIter, Array(15)).addGrid(gbt.maxBins, Array(200)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
 val pipeline = new Pipeline().setStages(Array(gbt))
 
@@ -140,7 +134,7 @@ val bestPipelineModel = cvModel.bestModel.asInstanceOf[PipelineModel]
 val bestGBTModel = bestPipelineModel.stages(0).asInstanceOf[GBTClassificationModel]
 println(s"Best max depth: ${bestGBTModel.getMaxDepth}")
 println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
-println(s"Best max iterations: ${bestGBTModel.getMaxBins}")
+println(s"Best max bins: ${bestGBTModel.getMaxBins}")
 
 
 

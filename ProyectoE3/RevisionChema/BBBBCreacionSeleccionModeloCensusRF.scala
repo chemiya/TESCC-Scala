@@ -1,25 +1,18 @@
-import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+
+
+
+
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{DecisionTreeClassifier, RandomForestClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.feature.StringIndexerModel
-import org.apache.spark.ml.feature.OneHotEncoder
-import org.apache.spark.ml.feature.OneHotEncoderModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.classification.DecisionTreeClassifier
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.StringIndexer
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.ml.classification.RandomForestClassifier
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics}
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics 
-import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
+import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 
 
 
@@ -98,7 +91,10 @@ schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
 //cargamos datasets------------------------
-import TransformDataframe._
+:load TransformDataframeV2.scala
+:load CleanDataframe.scala
+
+import TransformDataframeV2._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df)
 val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
@@ -120,15 +116,16 @@ val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros-----------------
 val rf = new RandomForestClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(rf.numTrees, Array(10, 20)).addGrid(rf.maxDepth, Array(5, 10)).build()
+val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(10)).addGrid(rf.numTrees, Array(10)).addGrid(rf.maxBins, Array(38)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
-val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)  
+val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2) 
 val cvModel = cv.fit(trainCensusDFProcesado)
 import org.apache.spark.ml.classification.RandomForestClassificationModel
 val bestModel = cvModel.bestModel.asInstanceOf[RandomForestClassificationModel]
 println("Best Model:")
-println(s" - Number of Trees: ${bestModel.getNumTrees}")
-println(s" - Max Depth: ${bestModel.getMaxDepth}")
+println(s" Number of Trees: ${bestModel.getNumTrees}")
+println(s" Max Depth: ${bestModel.getMaxDepth}")
+println(s"Best max bins: ${bestModel.getMaxBins}")
 
 
 
@@ -143,7 +140,7 @@ val RFcar = new RandomForestClassifier().setFeaturesCol("features").
  setLabelCol("label").
  setNumTrees(bestModel.getNumTrees).
  setMaxDepth(bestModel.getMaxDepth).
- setMaxBins(10).
+ setMaxBins(bestModel.getMaxBins).
  setMinInstancesPerNode(1).
  setMinInfoGain(0.0).
  setCacheNodeIds(false).
