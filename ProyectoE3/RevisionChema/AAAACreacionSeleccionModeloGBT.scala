@@ -123,11 +123,11 @@ val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros---------------------------
 val gbt = new GBTClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(10)).addGrid(gbt.maxIter, Array(15)).addGrid(gbt.maxBins, Array(200)).build()
+val paramGrid = new ParamGridBuilder().addGrid(gbt.maxDepth, Array(3,5,7)).addGrid(gbt.maxIter, Array(20,22,25)).addGrid(gbt.maxBins, Array(50,60,70)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
 val pipeline = new Pipeline().setStages(Array(gbt))
 
-val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2)  
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(5)  
 val cvModel = cv.fit(trainCensusDFProcesado)
 
 val bestPipelineModel = cvModel.bestModel.asInstanceOf[PipelineModel]
@@ -151,7 +151,7 @@ println(s"Best max bins: ${bestGBTModel.getMaxBins}")
 
 
 //utilizamos mejores parametros----------------------
-val GBTcar = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").setMaxIter(bestGBTModel.getMaxIter).
+val GBT = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").setMaxIter(bestGBTModel.getMaxIter).
  setMaxDepth(bestGBTModel.getMaxDepth).
  setMaxBins(bestGBTModel.getMaxBins).
  setMinInstancesPerNode(1).
@@ -159,10 +159,10 @@ val GBTcar = new GBTClassifier().setFeaturesCol("features").setLabelCol("label")
  setCacheNodeIds(false).
  setCheckpointInterval(10)
 
-val GBTcarModel_D =GBTcar.fit(trainCensusDFProcesado)
+val GBTModel_D =GBT.fit(trainCensusDFProcesado)
 
 
-GBTcarModel_D.write.overwrite().save(PATH + "modeloGBT")
+GBTModel_D.write.overwrite().save(PATH + "modeloGBT")
 
 
 

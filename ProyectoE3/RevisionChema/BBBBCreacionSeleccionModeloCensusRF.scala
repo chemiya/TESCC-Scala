@@ -116,16 +116,16 @@ val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
 
 //validacion cruzada y parametros-----------------
 val rf = new RandomForestClassifier().setLabelCol("label").setFeaturesCol("features")
-val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(10)).addGrid(rf.numTrees, Array(10)).addGrid(rf.maxBins, Array(38)).build()
+val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(10,11,12)).addGrid(rf.numTrees, Array(140,150,160)).addGrid(rf.maxBins, Array(150,170,200)).build()
 val evaluator = new MulticlassClassificationEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("accuracy")
-val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(2) 
+val cv = new CrossValidator().setEstimator(rf).setEvaluator(evaluator).setEstimatorParamMaps(paramGrid).setNumFolds(5) 
 val cvModel = cv.fit(trainCensusDFProcesado)
 import org.apache.spark.ml.classification.RandomForestClassificationModel
 val bestModel = cvModel.bestModel.asInstanceOf[RandomForestClassificationModel]
-println("Best Model:")
-println(s" Number of Trees: ${bestModel.getNumTrees}")
-println(s" Max Depth: ${bestModel.getMaxDepth}")
-println(s"Best max bins: ${bestModel.getMaxBins}")
+
+println(s"Number of Trees: ${bestModel.getNumTrees}")
+println(s"Max Depth: ${bestModel.getMaxDepth}")
+println(s"Max bins: ${bestModel.getMaxBins}")
 
 
 
@@ -136,7 +136,7 @@ println(s"Best max bins: ${bestModel.getMaxBins}")
 
 
 //utilizamos mejores parametros------------------------------
-val RFcar = new RandomForestClassifier().setFeaturesCol("features").
+val RF = new RandomForestClassifier().setFeaturesCol("features").
  setLabelCol("label").
  setNumTrees(bestModel.getNumTrees).
  setMaxDepth(bestModel.getMaxDepth).
@@ -146,12 +146,12 @@ val RFcar = new RandomForestClassifier().setFeaturesCol("features").
  setCacheNodeIds(false).
  setCheckpointInterval(10)
 
-val RFcarModel_D =RFcar.fit(trainCensusDFProcesado)
-RFcarModel_D.toDebugString
+val RFModel_D =RF.fit(trainCensusDFProcesado)
+RFModel_D.toDebugString
 
 
 
-RFcarModel_D.write.overwrite().save(PATH + "modeloRF")
+RFModel_D.write.overwrite().save(PATH + "modeloRF")
 
 
 
