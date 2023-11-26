@@ -1,27 +1,30 @@
+/* Master en Ingeniería Informática - Universidad de Valladolid
+*
+*  TECNICAS ESCLABLES DE ANÁLISIS DE DATOS EN ENTORNOS BIG DATA: CLASIFICADORES
+*  Proyecto de clasificación. Tercera etapa: Creación, selección y evaluación de modelos
+*
+*  Script para la evaluación del modelo creado con Random Forest
+*
+*  Grupo 2: Sergio Agudelo Bernal
+*           Miguel Ángel Collado Alonso
+*           José María Lozano Olmedo.
+*/
 
 
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.ml.classification.{DecisionTreeClassifier, RandomForestClassifier,RandomForestClassificationModel}
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
-import org.apache.spark.ml.linalg.DenseVector
-import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.stat.ChiSquareTest
-import org.apache.spark.ml.tuning.{ParamGridBuilder, CrossValidator}
-import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
-import org.apache.spark.sql.{DataFrame, SparkSession,Row}
+import org.apache.spark.ml.classification.{RandomForestClassifier,RandomForestClassificationModel}
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, BinaryClassificationMetrics}
 import org.apache.spark.ml.linalg.Vector
 
 
-
-val PATH="/home/usuario/Scala/Proyecto4/"
+//ubicación de los datos---------------------------
+val PATH="/home/usuario/Scala/ProyectoE3/"
 val loadedRFcensusModel = RandomForestClassificationModel.load(PATH + "modeloRF")
 val FILE_CENSUS_TEST="census-income.test"
 
 
-
-/*creamos un esquema para leer los datos */
+//creamos un esquema para leer los datos---------------------------
 val censusSchema = StructType(Array(
   StructField("age", IntegerType, false),
   StructField("class_of_worker", StringType, true),
@@ -68,78 +71,28 @@ val censusSchema = StructType(Array(
 ));
 
 
-
-
-
-
-
-
-
-
+//cargamos fichero con el dataset----------------------
 val census_df_test = spark.read.format("csv").
 option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
 schema(censusSchema).load(PATH + FILE_CENSUS_TEST)
 
 
-
-
-
-
-
-
-
-
-//cargamos datasets------------------------
+//cargamos metodos para transformación y limpieza----------------------------
 :load TransformDataframeV2.scala
 :load CleanDataframe.scala
 
 
+//Transformamos y limpiamos el dataset----------------------
 import TransformDataframeV2._
 import CleanDataframe._
-
-
-
 val census_df_limpio=cleanDataframe(census_df_test)
 val testCensusDF = transformDataFrame(census_df_limpio)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 val predictionsAndLabelsDF_RF = loadedRFcensusModel.transform(testCensusDF).select("prediction", "label","rawPrediction", "probability")
 
 val predictions = loadedRFcensusModel.transform(testCensusDF).select("prediction").rdd.map(_.getDouble(0))
 val labels = loadedRFcensusModel.transform(testCensusDF).select("label").rdd.map(_.getDouble(0))
-
-
-
-
-
-
-
-
-
-
-
 
 
 //metricas---------------------------------
@@ -161,28 +114,6 @@ labels.foreach {l => val fpl = metrics.falsePositiveRate(l)
 
 labels.foreach {l => val fpl = metrics.truePositiveRate(l)
         println(f"truePositiveRate($l) = $fpl%1.4f")}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //curva roc---------------------------------------------

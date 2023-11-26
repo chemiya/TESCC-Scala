@@ -1,11 +1,19 @@
-
-
+/* Master en Ingeniería Informática - Universidad de Valladolid
+*
+*  TECNICAS ESCLABLES DE ANÁLISIS DE DATOS EN ENTORNOS BIG DATA: CLASIFICADORES
+*  Proyecto de clasificación. Tercera etapa: Creación, selección y evaluación de modelos
+*
+*  Script para la creación del modelo utilizando GBT
+*
+*  Grupo 2: Sergio Agudelo Bernal
+*           Miguel Ángel Collado Alonso
+*           José María Lozano Olmedo.
+*/
 
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.ml.classification.{DecisionTreeClassifier, GBTClassificationModel, GBTClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.feature.{OneHotEncoder, OneHotEncoderModel, StringIndexer, StringIndexerModel, VectorAssembler}
 import org.apache.spark.ml.linalg.DenseVector
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.ml.stat.ChiSquareTest
@@ -14,14 +22,12 @@ import org.apache.spark.mllib.evaluation.{MulticlassMetrics, RegressionMetrics, 
 import org.apache.spark.sql.{DataFrame, SparkSession,Row}
 import org.apache.spark.sql.types.{IntegerType, StringType, DoubleType, StructField, StructType}
 
-
-val PATH="/home/usuario/Scala/Proyecto4/"
+//ubicación de los datos---------------------------
+val PATH="/home/usuario/Scala/ProyectoE3/"
 val FILE_CENSUS="census-income.data"
 
 
-
-
-/*creamos un esquema para leer los datos */
+//creamos un esquema para leer los datos---------------------------
 val censusSchema = StructType(Array(
   StructField("age", IntegerType, false),
   StructField("class_of_worker", StringType, true),
@@ -67,58 +73,21 @@ val censusSchema = StructType(Array(
   StructField("income", StringType, false)
 ));
 
-
-
-
-
-
+//cargamos fichero con el dataset----------------------
 val census_df = spark.read.format("csv").
 option("delimiter", ",").option("ignoreLeadingWhiteSpace","true").
 schema(censusSchema).load(PATH + FILE_CENSUS)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//cargamos dataset----------------------------
+//cargamos metodos para transformación y limpieza----------------------------
 :load TransformDataframeV2.scala
 :load CleanDataframe.scala
 
-
+//Transformamos y limpiamos el dataset----------------------
 import TransformDataframeV2._
 import CleanDataframe._
 val census_df_limpio=cleanDataframe(census_df)
 val trainCensusDFProcesado = transformDataFrame(census_df_limpio)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //validacion cruzada y parametros---------------------------
@@ -137,19 +106,6 @@ println(s"Best max iterations: ${bestGBTModel.getMaxIter}")
 println(s"Best max bins: ${bestGBTModel.getMaxBins}")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //utilizamos mejores parametros----------------------
 val GBT = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").setMaxIter(bestGBTModel.getMaxIter).
  setMaxDepth(bestGBTModel.getMaxDepth).
@@ -161,15 +117,5 @@ val GBT = new GBTClassifier().setFeaturesCol("features").setLabelCol("label").se
 
 val GBTModel_D =GBT.fit(trainCensusDFProcesado)
 
-
+//guardamos el modelo----------------------
 GBTModel_D.write.overwrite().save(PATH + "modeloGBT")
-
-
-
-
-
-
-
-
-
-
