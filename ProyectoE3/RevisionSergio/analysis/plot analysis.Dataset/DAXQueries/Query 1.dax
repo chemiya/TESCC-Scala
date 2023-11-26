@@ -1,0 +1,6 @@
+EVALUATE
+	SUMMARIZECOLUMNS(
+		'census-income'[income],
+		"class_count",
+		COUNT('census-income'[age])
+	)

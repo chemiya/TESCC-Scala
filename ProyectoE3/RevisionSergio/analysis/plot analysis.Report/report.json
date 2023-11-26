@@ -1,0 +1,52 @@
+{
+  "config": "{\"version\":\"5.49\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY23SU11\",\"version\":\"5.49\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":0,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"useEnhancedTooltips\":true,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}]}}",
+  "filters": "[{\"name\":\"Filter333ea8fb5525a2f5438d\",\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"census-income\"}},\"Property\":\"income\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"c\",\"Entity\":\"census-income\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"income\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"' 50000+.'\"}}],[{\"Literal\":{\"Value\":\"' - 50000.'\"}}]]}}}]},\"type\":\"Categorical\",\"howCreated\":1,\"objects\":{\"general\":[{\"properties\":{}}]}}]",
+  "layoutOptimization": 0,
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "disabled": false,
+        "items": [
+          {
+            "name": "CY23SU11",
+            "path": "BaseThemes/CY23SU11.json",
+            "type": 202
+          }
+        ],
+        "name": "SharedResources",
+        "type": 2
+      }
+    }
+  ],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Page 1",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "ReportSection",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"5a4596b07ac7c801b721\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":32,\"z\":0,\"width\":608,\"height\":352}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Series\":[{\"queryRef\":\"census-income.income\"}],\"Y\":[{\"queryRef\":\"Sum(census-income.age)\"}],\"Category\":[{\"queryRef\":\"census-income.weeks_worked_in_year (bins)\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"c\",\"Entity\":\"census-income\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"income\"},\"Name\":\"census-income.income\",\"NativeReferenceName\":\"income\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"age\"}},\"Function\":5},\"Name\":\"Sum(census-income.age)\",\"NativeReferenceName\":\"count\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"weeks_worked_in_year (bins)\"},\"Name\":\"census-income.weeks_worked_in_year (bins)\",\"NativeReferenceName\":\"weeks_worked_in_year (bins)\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"age\"}},\"Function\":5}}}]},\"columnProperties\":{\"Sum(census-income.age)\":{\"displayName\":\"count\"}},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{\"smallMultiplesLayout\":[{\"properties\":{\"rowCount\":{\"expr\":{\"Literal\":{\"Value\":\"1L\"}}}}}]},\"vcObjects\":{\"border\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 352.00,
+          "width": 608.00,
+          "x": 24.00,
+          "y": 32.00,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"e40f82cc5420a88369f8\",\"layouts\":[{\"id\":0,\"position\":{\"x\":640,\"y\":32,\"z\":1,\"width\":608,\"height\":352}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Series\":[{\"queryRef\":\"census-income.income\"}],\"Y\":[{\"queryRef\":\"census-income.count_class\"}],\"Category\":[{\"queryRef\":\"census-income.weeks_worked_in_year (bins)\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"c\",\"Entity\":\"census-income\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"income\"},\"Name\":\"census-income.income\",\"NativeReferenceName\":\"income\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"normalized_count\"},\"Name\":\"census-income.count_class\",\"NativeReferenceName\":\"normalized_count\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"weeks_worked_in_year (bins)\"},\"Name\":\"census-income.weeks_worked_in_year (bins)\",\"NativeReferenceName\":\"weeks_worked_in_year (bins)\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"normalized_count\"}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{\"smallMultiplesLayout\":[{\"properties\":{\"rowCount\":{\"expr\":{\"Literal\":{\"Value\":\"1L\"}}}}}]},\"vcObjects\":{\"border\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 352.00,
+          "width": 608.00,
+          "x": 640.00,
+          "y": 32.00,
+          "z": 1.00
+        }
+      ],
+      "width": 1280.00
+    }
+  ]
+}

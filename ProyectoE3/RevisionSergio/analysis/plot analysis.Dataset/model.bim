@@ -1,0 +1,1265 @@
+{
+  "compatibilityLevel": 1550,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"census-income\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.123.742.0 (23.11)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DaxQueryView_Desktop\",\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "DynamicImprovement": "HighConfidence",
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "census-income",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "age",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "1a32b7f7-5ba9-47d7-ac24-b439e553233b",
+            "sourceColumn": "age",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "class_of_worker",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "98561d53-adf6-4970-8bbb-98b14287a71e",
+            "sourceColumn": "class_of_worker",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "industry_code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"industry_code (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "d8acf408-8a3c-48c1-8596-1042edf37335",
+            "sourceColumn": "industry_code",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "occupation_code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"occupation_code (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "3e3dd9be-922f-44fc-bc9a-bb0fcbe117e1",
+            "sourceColumn": "occupation_code",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "education",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "78814454-0a5e-4fa5-86a7-424d1888d5fc",
+            "sourceColumn": "education",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "wage_per_hour",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"wage_per_hour (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "6e41723a-1f95-4e00-8a7c-8a806ee024e3",
+            "sourceColumn": "wage_per_hour",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "enrolled_in_edu_last_wk",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7ea96cfb-4d6a-45c4-9ee9-5d348edff0dc",
+            "sourceColumn": "enrolled_in_edu_last_wk",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "marital_status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f47e3d22-abce-486e-92ec-196feb2b2d78",
+            "sourceColumn": "marital_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "major_industry_code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ff794343-b36b-4fb2-8d51-78079453f984",
+            "sourceColumn": "major_industry_code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "major_occupation_code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "713dbf3c-5beb-4d08-af41-22b6b209a82b",
+            "sourceColumn": "major_occupation_code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "race",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c6d63669-ecc1-4ca9-b93f-54b7134be0eb",
+            "sourceColumn": "race",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "hispanic_Origin",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f8abb7fd-90a2-42dd-abd5-6f559297c4fc",
+            "sourceColumn": "hispanic_Origin",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "sex",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ff7f0823-bae5-4d1d-b4cc-3c704e5a0f42",
+            "sourceColumn": "sex",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "member_of_labor_union",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7e43a414-0f6b-4bd1-a015-45912fdb99fa",
+            "sourceColumn": "member_of_labor_union",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "reason_for_unemployment",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2b263115-e5b2-4f4b-ad91-9f591d905969",
+            "sourceColumn": "reason_for_unemployment",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "full_or_part_time_employment_status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8855d41a-af97-4fc7-9098-a5dab9562e78",
+            "sourceColumn": "full_or_part_time_employment_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "capital_gains",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "54451f38-08dc-4e11-a71d-539b543f0e32",
+            "sourceColumn": "capital_gains",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "capital_losses",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "90824200-7ddc-478d-bd09-61f8bba9adb2",
+            "sourceColumn": "capital_losses",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "dividends_from_stocks",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"dividends_from_stocks (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "90cb1720-6fbb-45a5-b4d3-a473b9b8070b",
+            "sourceColumn": "dividends_from_stocks",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "tax_filer_status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5b9aeee4-4b71-49cc-b04c-4c0dcc954d6d",
+            "sourceColumn": "tax_filer_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "region_of_previous_residence",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "559eb3c3-444f-4181-b1af-cdb88eb22454",
+            "sourceColumn": "region_of_previous_residence",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "state_of_previous_residence",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "81b3a695-afa9-4ccb-97e8-d20457dbf3be",
+            "sourceColumn": "state_of_previous_residence",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "detailed_household_and_family_status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "87dca3c9-a126-47f4-9819-f2faca7876a4",
+            "sourceColumn": "detailed_household_and_family_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "detailed_household_summary_in_house_instance_weight",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "edbecca4-0ffe-4245-b9ef-73ca870553b1",
+            "sourceColumn": "detailed_household_summary_in_house_instance_weight",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "total_person_earnings",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"total_person_earnings (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "dd33a512-87b7-42b0-926a-587eb5326096",
+            "sourceColumn": "total_person_earnings",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "migration_code_change_in_msa",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8d37c538-c6fb-4c0c-9289-b67730493b3b",
+            "sourceColumn": "migration_code_change_in_msa",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "migration_code_change_in_reg",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "11ff0fd5-4e30-4a85-8dae-9fd2e1b89fa3",
+            "sourceColumn": "migration_code_change_in_reg",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "migration_code_move_within_reg",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f43398e3-5fad-4e30-8b56-ff2d9e006d13",
+            "sourceColumn": "migration_code_move_within_reg",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "live_in_this_house_one_year_ago",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "54443bd7-1dbe-4369-aecd-c224a6e7fa37",
+            "sourceColumn": "live_in_this_house_one_year_ago",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "migration_prev_res_in_sunbelt",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "48515240-4b7e-45f9-83de-de291c2382d0",
+            "sourceColumn": "migration_prev_res_in_sunbelt",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "num_persons_worked_for_employer",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "f2874976-ebf8-44a2-a8fd-35a524c631f9",
+            "sourceColumn": "num_persons_worked_for_employer",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "family_members_under_18",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "08638dd8-52e2-44d5-bd2c-9ab5402d7598",
+            "sourceColumn": "family_members_under_18",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "country_of_birth_father",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0808b38c-d9fc-4a23-9ada-2601fb34f13b",
+            "sourceColumn": "country_of_birth_father",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "country_of_birth_mother",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f32199bf-33c5-4d71-85cb-561a82012d80",
+            "sourceColumn": "country_of_birth_mother",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "country_of_birth_self",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "729968d8-f50e-4843-b557-b05f6c499ac0",
+            "sourceColumn": "country_of_birth_self",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "citizenship",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "237c48c1-5e16-43a7-815c-2f767a240050",
+            "sourceColumn": "citizenship",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "own_business_or_self_employed",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "ccf215f9-1b2b-446b-ac56-9b143f42ec27",
+            "sourceColumn": "own_business_or_self_employed",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "fill_inc_questionnaire_for_veterans_ad",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fc7f8a61-3aa8-47d3-85b0-677f93077cee",
+            "sourceColumn": "fill_inc_questionnaire_for_veterans_ad",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "veterans_benefits",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "df5e6eb3-9ad5-4d42-8e8f-e3f526235cae",
+            "sourceColumn": "veterans_benefits",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "weeks_worked_in_year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"census-income\",\"TableItemName\":\"weeks_worked_in_year (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "906010cf-3f0b-44ee-9f56-6c0cd0b9d5a2",
+            "sourceColumn": "weeks_worked_in_year",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "42f5ac2b-03ca-47f9-8566-4d637119fcad",
+            "sourceColumn": "year",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "income",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8593037d-8fc9-47dc-9bba-b14985269075",
+            "sourceColumn": "income",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "industry_code (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"industry_code\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"industry_code\"}},\"Count\":30}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 30",
+              "",
+              "VAR __Min = MIN('census-income'[industry_code])",
+              "",
+              "VAR __Max = MAX('census-income'[industry_code])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = INT(('census-income'[industry_code] - __Min) / __Size)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[industry_code]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "industry_code"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "9f10e8e2-a0e9-40ec-840c-92f5cb7c97f8",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "occupation_code (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"occupation_code\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"occupation_code\"}},\"Count\":30}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 30",
+              "",
+              "VAR __Min = MIN('census-income'[occupation_code])",
+              "",
+              "VAR __Max = MAX('census-income'[occupation_code])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = INT(('census-income'[occupation_code] - __Min) / __Size)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[occupation_code]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "occupation_code"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "c1407a6a-c379-450a-9267-e4c1d6325f25",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "wage_per_hour (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"wage_per_hour\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"wage_per_hour\"}},\"Count\":25}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 25",
+              "",
+              "VAR __Min = MIN('census-income'[wage_per_hour])",
+              "",
+              "VAR __Max = MAX('census-income'[wage_per_hour])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = INT(('census-income'[wage_per_hour] - __Min) / __Size)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[wage_per_hour]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "wage_per_hour"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "711f38fe-8950-4e74-9a28-799f759d13d1",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "total_person_earnings (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"total_person_earnings\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"total_person_earnings\"}},\"Count\":20}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 20",
+              "",
+              "VAR __Min = MIN('census-income'[total_person_earnings])",
+              "",
+              "VAR __Max = MAX('census-income'[total_person_earnings])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = ",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[total_person_earnings]),",
+              "\t\tBLANK(),",
+              "\t\tROUNDDOWN(('census-income'[total_person_earnings] - __Min) / __Size, 0)",
+              "\t)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[total_person_earnings]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "total_person_earnings"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "7e8e49f1-b35f-4d31-b561-2dcd48c0d745",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "dividends_from_stocks (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"dividends_from_stocks\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"dividends_from_stocks\"}},\"Count\":20}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 20",
+              "",
+              "VAR __Min = MIN('census-income'[dividends_from_stocks])",
+              "",
+              "VAR __Max = MAX('census-income'[dividends_from_stocks])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = INT(('census-income'[dividends_from_stocks] - __Min) / __Size)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[dividends_from_stocks]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "dividends_from_stocks"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "2db7783d-4eb5-4054-9a77-a34ca6bc23e0",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "weeks_worked_in_year (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"c\",\"Entity\":\"census-income\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"weeks_worked_in_year\"}}],\"BinItem\":{\"Expression\":{\"Member\":{\"Expression\":{\"Discretize\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"weeks_worked_in_year\"}},\"Count\":10}},\"Member\":\"Min\"}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": [
+              "VAR __Count = 10",
+              "",
+              "VAR __Min = MIN('census-income'[weeks_worked_in_year])",
+              "",
+              "VAR __Max = MAX('census-income'[weeks_worked_in_year])",
+              "",
+              "VAR __Difference = (__Max - __Min)",
+              "",
+              "VAR __Size = IF(__Difference > 0, __Difference / __Count, 1)",
+              "",
+              "VAR __BinNumber = INT(('census-income'[weeks_worked_in_year] - __Min) / __Size)",
+              "",
+              "RETURN",
+              "\tIF(",
+              "\t\tISBLANK('census-income'[weeks_worked_in_year]),",
+              "\t\tBLANK(),",
+              "\t\t__Min + (MIN(__BinNumber, __Count - 1) * __Size)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "census-income"
+                          }
+                        },
+                        "Property": "weeks_worked_in_year"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "a3003e59-e67b-4c29-a43a-c65701da5d72",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "04483216-4c13-476a-94ad-adb4e2431dcf",
+        "measures": [
+          {
+            "name": "normalized_count",
+            "expression": "COUNT('census-income'[age]) / CALCULATE(COUNT('census-income'[age]), FILTER(ALL('census-income'), 'census-income'[income] = SELECTEDVALUE('census-income'[income], \"No class\")))",
+            "formatString": "0.00",
+            "lineageTag": "07f4706e-34a5-4b81-964b-7d66c459b3eb"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "census-income",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\sagud\\Code\\repos\\TESCC-Scala\\ProyectoE3\\analysis\\census-income.data\"),[Delimiter=\",\", Columns=42, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(Source,{{\"Column1\", \"age\"}, {\"Column2\", \"class_of_worker\"}, {\"Column3\", \"industry_code\"}, {\"Column4\", \"occupation_code\"}, {\"Column5\", \"education\"}, {\"Column6\", \"wage_per_hour\"}, {\"Column7\", \"enrolled_in_edu_last_wk\"}, {\"Column8\", \"marital_status\"}, {\"Column9\", \"major_industry_code\"}, {\"Column10\", \"major_occupation_code\"}, {\"Column11\", \"race\"}, {\"Column12\", \"hispanic_Origin\"}, {\"Column13\", \"sex\"}, {\"Column14\", \"member_of_labor_union\"}, {\"Column15\", \"reason_for_unemployment\"}, {\"Column16\", \"full_or_part_time_employment_status\"}, {\"Column17\", \"capital_gains\"}, {\"Column18\", \"capital_losses\"}, {\"Column19\", \"dividends_from_stocks\"}, {\"Column20\", \"tax_filer_status\"}, {\"Column21\", \"region_of_previous_residence\"}, {\"Column22\", \"state_of_previous_residence\"}, {\"Column23\", \"detailed_household_and_family_status\"}, {\"Column24\", \"detailed_household_summary_in_house_instance_weight\"}, {\"Column25\", \"total_person_earnings\"}, {\"Column26\", \"migration_code_change_in_msa\"}, {\"Column27\", \"migration_code_change_in_reg\"}, {\"Column28\", \"migration_code_move_within_reg\"}, {\"Column29\", \"live_in_this_house_one_year_ago\"}, {\"Column30\", \"migration_prev_res_in_sunbelt\"}, {\"Column31\", \"num_persons_worked_for_employer\"}, {\"Column32\", \"family_members_under_18\"}, {\"Column33\", \"country_of_birth_father\"}, {\"Column34\", \"country_of_birth_mother\"}, {\"Column35\", \"country_of_birth_self\"}, {\"Column36\", \"citizenship\"}, {\"Column37\", \"own_business_or_self_employed\"}, {\"Column38\", \"fill_inc_questionnaire_for_veterans_ad\"}, {\"Column39\", \"veterans_benefits\"}, {\"Column40\", \"weeks_worked_in_year\"}, {\"Column41\", \"year\"}, {\"Column42\", \"income\"}}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Renamed Columns\",{{\"age\", Int64.Type}, {\"class_of_worker\", type text}, {\"industry_code\", Int64.Type}, {\"occupation_code\", Int64.Type}, {\"education\", type text}, {\"wage_per_hour\", Int64.Type}, {\"enrolled_in_edu_last_wk\", type text}, {\"marital_status\", type text}, {\"major_industry_code\", type text}, {\"major_occupation_code\", type text}, {\"race\", type text}, {\"hispanic_Origin\", type text}, {\"sex\", type text}, {\"member_of_labor_union\", type text}, {\"reason_for_unemployment\", type text}, {\"full_or_part_time_employment_status\", type text}, {\"capital_gains\", Int64.Type}, {\"capital_losses\", Int64.Type}, {\"dividends_from_stocks\", Int64.Type}, {\"tax_filer_status\", type text}, {\"region_of_previous_residence\", type text}, {\"state_of_previous_residence\", type text}, {\"detailed_household_and_family_status\", type text}, {\"detailed_household_summary_in_house_instance_weight\", type text}, {\"total_person_earnings\", type number}, {\"migration_code_change_in_msa\", type text}, {\"migration_code_change_in_reg\", type text}, {\"migration_code_move_within_reg\", type text}, {\"live_in_this_house_one_year_ago\", type text}, {\"migration_prev_res_in_sunbelt\", type text}, {\"num_persons_worked_for_employer\", Int64.Type}, {\"family_members_under_18\", type text}, {\"country_of_birth_father\", type text}, {\"country_of_birth_mother\", type text}, {\"country_of_birth_self\", type text}, {\"citizenship\", type text}, {\"own_business_or_self_employed\", Int64.Type}, {\"fill_inc_questionnaire_for_veterans_ad\", type text}, {\"veterans_benefits\", Int64.Type}, {\"weeks_worked_in_year\", Int64.Type}, {\"year\", Int64.Type}, {\"income\", type text}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateTableTemplate_13c5de85-0a89-4e3e-b338-9d13c0a5c9e4",
+        "annotations": [
+          {
+            "name": "__PBI_TemplateDateTable",
+            "value": "true"
+          },
+          {
+            "name": "DefaultItem",
+            "value": "DateHierarchy"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "c158f2d9-67db-4c7f-8a81-6baa0c418d65",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "ce231c44-9e49-4b1f-a2af-c66ee7d31348",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "MonthNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "b7070ad5-6877-4cb0-95da-920a9477edd6",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "d76484a7-00f6-4b84-ae89-94ff574d2a2c",
+            "sortByColumn": "MonthNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "QuarterNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([MonthNo] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "845405a7-a0d1-42d0-88ca-ef07730904d6",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Qtr \" & [QuarterNo]",
+            "isHidden": true,
+            "lineageTag": "9c442cef-25d6-41e9-8b13-da379e61b612",
+            "sortByColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Day",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "0cba5fe1-f8f4-4189-a1ff-06f7b3b6765d",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Date Hierarchy",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "e477fa89-aad8-4fcd-b737-ccec487d1149",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "3de8ef9b-5a72-4588-a884-8c6f4085a8a9",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "f9f19b41-2a8d-4062-8f3e-16dd8940e6a2",
+                "ordinal": 2
+              },
+              {
+                "name": "Day",
+                "column": "Day",
+                "lineageTag": "36e14431-b60a-40c0-8a59-6374da0b022f",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "7b99c806-7f91-43ed-8609-dfb1a94401d8"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "fb193ff9-5cab-49e2-a406-ecbedb861671",
+        "partitions": [
+          {
+            "name": "DateTableTemplate_13c5de85-0a89-4e3e-b338-9d13c0a5c9e4",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(2015,1,1), Date(2015,1,1))",
+              "type": "calculated"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
